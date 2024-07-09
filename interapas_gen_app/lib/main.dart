@@ -1,6 +1,15 @@
-import 'package:flutter/material.dart';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:interapas_gen_app/screens/login.dart';
+import 'package:interapas_gen_app/screens/menu.dart';
+import 'screens/inicio.dart';
+import 'services/local_storage.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await LocalStorage.configurarPrefs();   //Se manda a obtener las preferencias al inicio
+
   runApp(const MainApp());
 }
 
@@ -9,12 +18,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      home: const Inicio_Screen(),
+      routes: {   //Definición de rutas de las pantallas para usar los Navigator..Named
+        '/login': (context) => const Login_Screen(),
+        '/menu' : (context) => const Menu_Screen(),
+      },
     );
   }
 }
