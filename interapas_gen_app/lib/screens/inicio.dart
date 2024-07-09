@@ -14,13 +14,10 @@ class Inicio_Screen extends StatelessWidget {
     OperacionesPreferencias negocio1 = OperacionesPreferencias();
     Future.delayed(Durations.extralong4).then((erg) {
 
-      if(negocio1.consultarIdUsuario() > 0){
+      if(negocio1.consultarIdUsuario() > 0) {   //Aqui valida si hay sesión iniciada.
         Navigator.of(context).popAndPushNamed("/menu");
-      } else{
-        negocio1.insertarIdUsuario(20).then( (erg) {
-            Navigator.of(context).popAndPushNamed('/login');
-          }
-        );
+      } else {
+        Navigator.of(context).popAndPushNamed('/login');
       }
     });
 
