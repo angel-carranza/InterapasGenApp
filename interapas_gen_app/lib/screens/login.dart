@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/utilities/formateo.dart';
+import 'package:interapas_gen_app/widgets/acceso_config.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
 
 class Login_Screen extends StatefulWidget {
@@ -32,10 +33,20 @@ class _Login_ScreenState extends State<Login_Screen> {
         fgCargando = true;
       });
 
-      
+
     }
   }
 
+  _accesoConfig() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => SimpleDialog(
+        children: [
+          AccesoConfig(TextEditingController(text: ""))
+        ],
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +83,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: _accesoConfig,
                       icon: Icon(
                         Icons.rss_feed_rounded,
                         size: 30.0,
