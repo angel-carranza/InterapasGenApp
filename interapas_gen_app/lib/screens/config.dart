@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
+import 'package:interapas_gen_app/widgets/conexion_disponible.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
 
 import '../utilities/popup.dart';
@@ -19,15 +20,13 @@ class Configuracion_Screen extends StatefulWidget {
 class _Configuracion_ScreenState extends State<Configuracion_Screen> {
   bool fgCargando = true;   //Para mostrar una pantalla de carga, lo mostrará al inicio.
 
-  List<API_CONEXION>? conexiones = List.empty(growable: true);
+  List<API_CONEXION> conexiones = List.empty(growable: true);
 
   Widget contenido = const Center(child: Loader(textoInformativo: "Cargando interfaz.",));
 
 
   Future<void> _cargaInicial() async {   //Carga inicial cuando se ejecuta la pantalla
     conexiones = await AccesoDatos.obtieneAPIsGuardadas();   //Obtiene las conexiones guardadas.
-
-    1+2;
 
     setState(() {   //Para mandar recargar ya después de las consultas.
       fgCargando = false;
@@ -62,31 +61,40 @@ class _Configuracion_ScreenState extends State<Configuracion_Screen> {
             const SizedBox(
               height: 20.0,
             ),
- /*           ListView.builder(
+            ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: conexiones.length,
-              itemBuilder: (context, index) => Conexion_Configuracion(conexiones[index], _cargaInicial)
+              itemBuilder: (context, index) => ConexionDisponible(conexiones[index], _cargaInicial)
             ),
             const SizedBox(
               height: 40.0,
             ),
             TextButton(
               onPressed: () async {
-                if(await AccesoDatosLocal.InsertarConexiones(await InterfazAPI.ObtenerAPIs())){
-                  if(context.mounted) {
-                    _cargaInicial();
-                    mensajeSimpleOK("Se actualizó correctamente.", context);
+                List<API_CONEXION>? lista_nueva = await AccesoDatos.obtieneAPIs();
+
+                if(lista_nueva != null){
+                  if(lista_nueva.isNotEmpty){
+
+                    if(await AccesoDatos.insertaNuevasConexiones(lista_nueva)){
+                      if(context.mounted) {
+                        _cargaInicial();
+                        mensajeSimpleOK("Se actualizó correctamente.", context);
+                      }
+                    } else {
+                      mensajeSimpleOK("No se pudieron actualizar las conexiones, intente más tarde...", context);
+                    }
+                  } else {
+                    mensajeSimpleOK("No se encontraron conexiones...", context);
                   }
-                } else{
-                  if(context.mounted) {
-                    mensajeSimpleOK("Hubo un error", context);
-                  }
+                } else {
+                  mensajeSimpleOK("No se encontraron conexiones...", context);
                 }
-                
+              
               },
               child: const Text("Actualizar direcciones"),
-            ), */
+            ),
           ],
         ),
       );

@@ -25,8 +25,8 @@ class API_CONEXION {
     json["api_principal_ip"] as String,
     json["api_principal_dir"] as String,
     json["fg_activa"] as bool,
-    API_SECUNDARIA_IP: json["api_secundaria_dir"] == null ? "" : json["api_secundaria_dir"] as String,
-    API_SECUNDARIA_DIR: json["api_secundaria_ip"] == null ? "" : json["api_secundaria_ip"] as String,
+    API_SECUNDARIA_IP: json["api_secundaria_ip"] == null ? "" : json["api_secundaria_ip"] as String,
+    API_SECUNDARIA_DIR: json["api_secundaria_dir"] == null ? "" : json["api_secundaria_dir"] as String,
   );
 
   static API_CONEXION fromJson(Map<String, Object?> json) => API_CONEXION(
@@ -37,4 +37,13 @@ class API_CONEXION {
     API_SECUNDARIA_IP: json["API_SECUNDARIA"] == null ? "" : json["API_SECUNDARIA"] as String,
     API_SECUNDARIA_DIR: json["DIR_SECUNDARIA"] == null ? "" : json["DIR_SECUNDARIA"] as String,
   );
+
+    Map<String, Object?> toJson() => {
+    "CL_API" : CLAVE,
+    "API_PRIMARIA" : API_PRINCIPAL_IP,
+    "DIR_PRIMARIA" : API_PRINCIPAL_DIR,
+    "API_SECUNDARIA" : API_SECUNDARIA_IP,
+    "DIR_SECUNDARIA" : API_SECUNDARIA_DIR,
+    "FG_ACTIVA": FG_ACTIVA
+  };
 }
