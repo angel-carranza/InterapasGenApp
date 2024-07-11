@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:interapas_gen_app/screens/censos/menu_censos.dart';
+import 'package:interapas_gen_app/screens/cortes/menu_cortes.dart';
 import 'package:interapas_gen_app/screens/login.dart';
 import 'package:interapas_gen_app/screens/menu.dart';
 import 'screens/inicio.dart';
@@ -23,6 +25,8 @@ class MainApp extends StatelessWidget {
       routes: {   //Definición de rutas de las pantallas para usar los Navigator..Named
         '/login': (context) => const Login_Screen(),
         '/menu' : (context) => const Menu_Screen(),
+        '/censos' : (context) => const MenuCensos_Screen(),
+        '/cortes' : (context) => const MenuCortes_Screen(),
       },
     );
   }
