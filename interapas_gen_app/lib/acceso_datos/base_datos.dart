@@ -37,6 +37,16 @@ class BaseDatos {
         , FG_ACTIVA BOOLEAN DEFAULT 0 NOT NULL
       );
     ''');
+
+    await db.execute('''
+      CREATE TABLE S_SESION_USUARIO(
+        ID_USUARIO INTEGER PRIMARY KEY
+        , ID_EMPLEADO INTEGER NOT NULL
+        , CL_USUARIO TEXT NOT NULL
+        , CL_CONEXION TEXT NOT NULL
+        , FG_ACTIVO BOOLEAN DEFAULT 0 NOT NULL
+      );
+    ''');
   }
   
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {    //Función que se ejecuta cuando el número de versión es mayor al instalado.

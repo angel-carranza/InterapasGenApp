@@ -2,7 +2,11 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
+import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
+import 'package:interapas_gen_app/utilities/cifrado.dart';
 import 'package:interapas_gen_app/utilities/formateo.dart';
+import 'package:interapas_gen_app/utilities/popup.dart';
 import 'package:interapas_gen_app/widgets/acceso_config.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
 
@@ -25,18 +29,6 @@ class _Login_ScreenState extends State<Login_Screen> {
   final TextEditingController ctrlPassword = TextEditingController();   //Para controlar el textbox de contraseña y limpiarlo al dar ingresar.
 
 
-  void _ingresar() {    //Función que inicia sesión con los campos introducidos
-    if(_formKey.currentState!.validate()){  //Si paso los validator de todos los campos del formulario.
-      _formKey.currentState!.save();
-
-      setState(() {
-        fgCargando = true;
-      });
-
-
-    }
-  }
-
   _accesoConfig() async {
     await showDialog(
       context: context,
@@ -48,12 +40,68 @@ class _Login_ScreenState extends State<Login_Screen> {
     );
   }
 
+  _ingresar() {    //Función que inicia sesión con los campos introducidos
+    if(_formKey.currentState!.validate()){  //Si paso los validator de todos los campos del formulario.
+      _formKey.currentState!.save();
+
+      setState(() {
+        fgCargando = true;
+      });
+
+      _validarUsuario();
+    }
+  }
+
+  _validarUsuario() async {
+    Cifrado cif = Cifrado();
+    API_USUARIO usuarioAguasys = await AccesoDatos.obtieneAcceso(_usuarioIngresado, cif.encriptarAEScbc(_passwordIngresado));
+
+    if(usuarioAguasys.ID_EMPLEADO > 0){   //Si se obtuvo una respuesta de un usario desde la API...
+
+      if(usuarioAguasys.NB_PASSWORD == "1"){    //Si la contraseña fue correcta.
+        if(await AccesoDatos.iniciaSesion(usuarioAguasys)){
+          if(context.mounted){
+            Navigator.of(context).pushNamedAndRemoveUntil('/menu', (Route<dynamic> route) => false);
+          }
+        } else {
+          if(context.mounted){
+            mensajeSimpleOK("Hubo un error intentando acceder en el dispositivo.", context);          
+          }
+        }
+      }
+      else {
+        if(context.mounted){
+          mensajeSimpleOK("La contraseña no es correcta, verifiquela por favor.", context);
+        }
+      }
+
+    }
+    else{
+      String mensajeError = "";
+      switch(usuarioAguasys.ID_EMPLEADO){
+        case -902:
+          mensajeError = "Hubo un error de conexión, verifique e intente de nuevo.";
+          break;
+        default:
+          mensajeError = "Ocurrió un error inesperado. Intente de nuevo por favor.";
+      }
+
+      if(context.mounted) {
+        mensajeSimpleOK(mensajeError, context);
+      }
+    }
+
+    setState(() {
+      fgCargando = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget botonLogin = TextButton( //Declaración de boton con definición predeterminada mostrando error, por si acaso.
       onPressed: null,
-      style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Color.fromARGB(255, 150, 0, 0))),
-      child: Text("##Error##"));
+      style: ButtonStyle(backgroundColor: WidgetStateProperty.all(const Color.fromARGB(255, 150, 0, 0))),
+      child: const Text("##Error##"));
 
     if(fgCargando){
       botonLogin = TextButton(
@@ -63,7 +111,7 @@ class _Login_ScreenState extends State<Login_Screen> {
     } else {
       botonLogin = TextButton(
         onPressed: _ingresar,
-        child: Text("Ingresar")
+        child: const Text("Ingresar")
       );
     }
 
@@ -84,7 +132,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                   children: [
                     IconButton(
                       onPressed: _accesoConfig,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.rss_feed_rounded,
                         size: 30.0,
                       )
@@ -96,9 +144,9 @@ class _Login_ScreenState extends State<Login_Screen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('lib/assets/img/logo.png'),
-                    SizedBox(height: 36.0,),
+                    const SizedBox(height: 36.0,),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         label: Text("Usuario"),
                       ),
                       validator: (value) {
@@ -112,7 +160,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                       },
                       inputFormatters: [MayusculasFormatter()],   //Usa una clase y su método para siempre hacer mayuscula lo introducido en este campo.
                     ),
-                    SizedBox(height: 12,),
+                    const SizedBox(height: 12,),
                     TextFormField(
                       obscureText: !fgMostrarContrasena,
                       obscuringCharacter: '*',
@@ -145,7 +193,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                         ctrlPassword.clear();   //Siempre borra la contraseña al intentar ingresar, en caso de que no pueda acceder.
                       },
                     ),
-                    SizedBox(height: 30.0,),
+                    const SizedBox(height: 30.0,),
                     botonLogin,
                   ],
                 ),

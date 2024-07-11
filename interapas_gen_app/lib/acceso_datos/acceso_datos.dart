@@ -2,10 +2,12 @@
 import 'dart:convert';
 
 import 'package:interapas_gen_app/acceso_datos/api/default.dart';
+import 'package:interapas_gen_app/acceso_datos/api/general.dart';
 import 'package:interapas_gen_app/acceso_datos/bd.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:http/http.dart' as http;
+import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 
 //Clase con todas las funciones intermediarias a 
 // los diferentes tipos de datos que maneja la aplicación.
@@ -27,6 +29,23 @@ class AccesoDatos {
     } on Exception catch(_){
       return null;
     }
+  }
+
+  static Future<API_USUARIO> obtieneAcceso(clUsuario, nbPassword) async {
+    API_USUARIO resultado = API_USUARIO();
+    generalAPI api = generalAPI();
+
+    http.Response r = await api.getAcceso(clUsuario, nbPassword);
+
+    if(r.statusCode == 200){
+      Map<String, Object?> cuerpo = (json.decode(r.body) as List).first;
+
+      resultado = API_USUARIO.fromJsonAPI(cuerpo);
+    } else {
+      resultado = API_USUARIO(ID_EMPLEADO: -902);
+    }
+    
+    return resultado;
   }
   //========================================//
 
@@ -61,6 +80,41 @@ class AccesoDatos {
       resultado = await OperacionesPreferencias.insertarConexionActiva(respuesta);
 
       resultado = true;
+    }
+
+    return resultado;
+  }
+
+  static Future<bool> iniciaSesion(API_USUARIO usuario) async {
+    bool resultado = false;
+    List<String>? conexionActual = OperacionesPreferencias.consultarConexionActiva();
+
+    if(conexionActual != null){
+      String claveConexion = conexionActual[0];
+
+      if(claveConexion.isNotEmpty){
+
+        int idUsuario = 0;
+        
+        idUsuario = await operacionesBD.iniciarSesion(usuario, claveConexion);
+
+        if(idUsuario > 0) {  //Si pudo iniciar sesión en la BD local
+          resultado = await OperacionesPreferencias.insertarIdUsuario(idUsuario);
+        }
+
+      }
+    }
+
+    return resultado;
+  }
+  
+  static Future<bool> cierraSesion() async {
+    bool resultado = false;
+    
+    resultado = await operacionesBD.cerrarSesiones();
+
+    if(resultado){
+      resultado = await OperacionesPreferencias.insertarIdUsuario(0);
     }
 
     return resultado;

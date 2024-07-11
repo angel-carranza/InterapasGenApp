@@ -4,7 +4,9 @@
 import 'dart:convert';
 
 import 'package:interapas_gen_app/acceso_datos/base_datos.dart';
+import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
+import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 import 'package:sqflite/sqflite.dart';
 
 class operacionesBD {
@@ -115,4 +117,68 @@ class operacionesBD {
       return API_CONEXION("", "", "", false);
     }
   }
+
+  static Future<int> iniciarSesion(API_USUARIO usuario, String conexion) async {
+    int idUsuario = 0;    //Valor que va a retornar.
+    Database local = await BaseDatos.bd.database;
+    
+    //Primero checa si ya existe el usuario en el telefono
+    final maps = await local.query(
+      "S_SESION_USUARIO",
+      columns: [
+        "ID_USUARIO"
+      ],
+      where: "ID_EMPLEADO = ? AND CL_CONEXION = ? ",
+      whereArgs: [usuario.ID_EMPLEADO, conexion]
+    );
+
+    if(maps.isEmpty){ //Si no existia previamente, crea el registro.
+
+      idUsuario = await local.insert(
+        "S_SESION_USUARIO",
+        {
+          "ID_EMPLEADO" : usuario.ID_EMPLEADO,
+          "CL_USUARIO" : usuario.CL_USUARIO,
+          "CL_CONEXION" : conexion,
+          "FG_ACTIVO": true,
+        }
+      );
+      
+    } else {    //Si ya existía, lo activa, para iniciar sesión.
+      idUsuario = maps.first["ID_USUARIO"] as int;
+
+      int respuesta = await local.update(
+        "S_SESION_USUARIO",
+        { "FG_ACTIVO": true, },
+        where: "ID_USUARIO = ? AND ID_EMPLEADO = ? AND CL_CONEXION = ? ",
+        whereArgs: [idUsuario, usuario.ID_EMPLEADO, conexion],
+      );
+
+      if(respuesta < 1) idUsuario = 0;
+    }
+
+    return idUsuario;
+  }
+
+  static Future<bool> cerrarSesiones() async {
+    bool resultado = false;
+
+    try {
+      Database local = await BaseDatos.bd.database;
+
+      int respuesta = await local.update(
+        "S_SESION_USUARIO",
+        {"FG_ACTIVO" : false},
+      );
+
+      if(respuesta > 0){
+        resultado = true;
+      }
+    } on Exception catch(_) {
+      return false;
+    }
+
+    return resultado;
+  }
+
 }

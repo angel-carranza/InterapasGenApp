@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
+import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/widgets/conexion_disponible.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';

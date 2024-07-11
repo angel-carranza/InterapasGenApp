@@ -7,17 +7,17 @@ import 'package:interapas_gen_app/services/local_storage.dart';
 //Clase intermedia para realizar operaciones con las shared_preferences
 class OperacionesPreferencias {
 
-  int consultarIdUsuario() {
+  static int consultarIdUsuario() {
     int? entero = LocalStorage.preferencias.getInt("idUsuario");
     return entero ?? 0;
   }
 
-  Future<bool> insertarIdUsuario(int p_idUsuario) async {
+  static Future<bool> insertarIdUsuario(int p_idUsuario) async {
     bool resultado = await LocalStorage.preferencias.setInt('idUsuario', p_idUsuario);
     return resultado;
   }
 
-  static List<String>? consultarConexion() => LocalStorage.preferencias.getStringList('conexionActiva');
+  static List<String>? consultarConexionActiva() => LocalStorage.preferencias.getStringList('conexionActiva');
 
   static Future<bool> insertarConexionActiva(API_CONEXION conexion) async {
     bool resultado = await LocalStorage.preferencias.setStringList(
@@ -34,4 +34,10 @@ class OperacionesPreferencias {
     return resultado;
   }
   
+  static String? consulatarToken() => LocalStorage.preferencias.getString('tokenAPI');
+
+  static Future<bool> insertarToken(String token) async {
+    bool resultado = await LocalStorage.preferencias.setString('tokenAPI', token);
+    return resultado;
+  }
 }
