@@ -40,4 +40,15 @@ class OperacionesPreferencias {
     bool resultado = await LocalStorage.preferencias.setString('tokenAPI', token);
     return resultado;
   }
+
+  static int consultarIdEmpleado() {
+    int? entero = LocalStorage.preferencias.getInt("idEmpleado");
+    return entero ?? 0;
+  }
+
+  static Future<bool> insertarIdEmpleado(int p_idEmpleado) async {
+    bool resultado = await LocalStorage.preferencias.setInt("idEmpleado", p_idEmpleado);
+    return resultado;
+  }
+
 }

@@ -1,12 +1,14 @@
 
 import 'dart:convert';
 
+import 'package:interapas_gen_app/acceso_datos/api/cortes.dart';
 import 'package:interapas_gen_app/acceso_datos/api/default.dart';
 import 'package:interapas_gen_app/acceso_datos/api/general.dart';
 import 'package:interapas_gen_app/acceso_datos/bd.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:http/http.dart' as http;
+import 'package:interapas_gen_app/data/api/API_CORTE.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 
 //Clase con todas las funciones intermediarias a 
@@ -45,6 +47,29 @@ class AccesoDatos {
       resultado = API_USUARIO(ID_EMPLEADO: -902);
     }
     
+    return resultado;
+  }
+
+  static Future<List<API_CORTE>> obtieneCortes() async {
+    List<API_CORTE> resultado = List.empty(growable: true);
+    cortesAPI api = cortesAPI();
+
+    int idEmpleado = OperacionesPreferencias.consultarIdEmpleado();
+
+    if(idEmpleado > 0){
+      
+      http.Response r = await api.getCortes(idEmpleado);
+
+      if(r.statusCode == 200) {
+        var cuerpo = json.decode(r.body);
+
+        for(var registro in cuerpo) {
+          resultado.add(API_CORTE.fromJsonAPI(registro));
+        }
+      }
+      
+    }
+
     return resultado;
   }
   //========================================//
@@ -100,6 +125,7 @@ class AccesoDatos {
 
         if(idUsuario > 0) {  //Si pudo iniciar sesión en la BD local
           resultado = await OperacionesPreferencias.insertarIdUsuario(idUsuario);
+          resultado = await OperacionesPreferencias.insertarIdEmpleado(usuario.ID_EMPLEADO);
         }
 
       }
@@ -115,6 +141,7 @@ class AccesoDatos {
 
     if(resultado){
       resultado = await OperacionesPreferencias.insertarIdUsuario(0);
+      resultado = await OperacionesPreferencias.insertarIdEmpleado(0);
     }
 
     return resultado;
