@@ -1,0 +1,5 @@
+
+enum agrupaciones {
+  calles,
+  colonias,
+}
