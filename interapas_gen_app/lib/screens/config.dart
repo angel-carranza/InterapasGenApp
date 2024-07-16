@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
-import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/widgets/conexion_disponible.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
@@ -73,12 +72,12 @@ class _Configuracion_ScreenState extends State<Configuracion_Screen> {
             ),
             TextButton(
               onPressed: () async {
-                List<API_CONEXION>? lista_nueva = await AccesoDatos.obtieneAPIs();
+                List<API_CONEXION>? listaNueva = await AccesoDatos.obtieneAPIs();
 
-                if(lista_nueva != null){
-                  if(lista_nueva.isNotEmpty){
+                if(listaNueva != null){
+                  if(listaNueva.isNotEmpty){
 
-                    if(await AccesoDatos.insertaNuevasConexiones(lista_nueva)){
+                    if(await AccesoDatos.insertaNuevasConexiones(listaNueva)){
                       if(context.mounted) {
                         _cargaInicial();
                         mensajeSimpleOK("Se actualizó correctamente.", context);
