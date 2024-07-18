@@ -4,7 +4,6 @@
 import 'dart:convert';
 
 import 'package:interapas_gen_app/acceso_datos/base_datos.dart';
-import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 import 'package:sqflite/sqflite.dart';

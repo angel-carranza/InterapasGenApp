@@ -10,12 +10,6 @@
             "type": "dart"
         },
         {
-            "name": "GenApp Profile",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
             "name": "GenApp Release",
             "request": "launch",
             "type": "dart",
