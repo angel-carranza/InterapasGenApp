@@ -10,6 +10,7 @@ import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:http/http.dart' as http;
 import 'package:interapas_gen_app/data/api/API_CORTE.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
+import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 
 //Clase con todas las funciones intermediarias a 
 // los diferentes tipos de datos que maneja la aplicación.
@@ -50,8 +51,8 @@ class AccesoDatos {
     return resultado;
   }
 
-  static Future<List<API_CORTE>> obtieneCortes() async {
-    List<API_CORTE> resultado = List.empty(growable: true);
+  static Future<List<API_CORTE>?> obtieneCortes() async {
+    List<API_CORTE>? resultado = List.empty(growable: true);
     cortesAPI api = cortesAPI();
 
     int idEmpleado = OperacionesPreferencias.consultarIdEmpleado();
@@ -66,6 +67,9 @@ class AccesoDatos {
         for(var registro in cuerpo) {
           resultado.add(API_CORTE.fromJsonAPI(registro));
         }
+      }
+      else {
+        resultado = null;
       }
       
     }
@@ -146,6 +150,21 @@ class AccesoDatos {
 
     return resultado;
   }
+
+  static Future<List<K_CORTE>?> obtieneCortesLocales() async {
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0){
+
+      return await operacionesBD.obtenerCortes(idUsuario);
+
+    } else {
+      return null;
+    }
+  }
+
+  static Future<bool> insertaCortesNuevos(List<API_CORTE> nuevos) async => await operacionesBD.insertarCortes(nuevos);
+
   //========================================//
 
 }

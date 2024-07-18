@@ -4,9 +4,13 @@
 import 'dart:convert';
 
 import 'package:interapas_gen_app/acceso_datos/base_datos.dart';
+import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../data/api/API_CORTE.dart';
+import '../data/bd/K_CORTE.dart';
 
 class operacionesBD {
   
@@ -180,4 +184,48 @@ class operacionesBD {
     return resultado;
   }
 
+  static Future<List<K_CORTE>> obtenerCortes(int idUsuario) async {
+    List<K_CORTE> resultado = List.empty(growable: true);
+    Database local = await BaseDatos.bd.database;
+
+    final maps = await local.query(
+      "K_CORTE",
+      where: "ID_USUARIO = ?",
+      whereArgs: [idUsuario],
+    );
+
+    for(var map in maps){
+      resultado.add(K_CORTE.fromJson(map));
+    }
+
+    return resultado;
+  } 
+
+  static Future<bool> insertarCortes(List<API_CORTE> nuevas) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+    Batch batch = local.batch();
+
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0){
+      try {
+        
+        for(API_CORTE nuevo in nuevas){
+          batch.insert(
+            "K_CORTE",
+            K_CORTE.fromAPItoJson(idUsuario, nuevo),
+          );
+        }
+
+        batch.commit();   //Ejecuta todas las inserciones
+        resultado = true;
+
+      } on Exception catch(_){
+        resultado = false;
+      }
+    }
+
+    return resultado;
+  }
 }

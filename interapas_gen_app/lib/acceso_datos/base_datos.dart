@@ -47,6 +47,27 @@ class BaseDatos {
         , FG_ACTIVO BOOLEAN DEFAULT 0 NOT NULL
       );
     ''');
+
+    await db.execute('''
+      CREATE TABLE K_CORTE(
+        ID_CORTE INTEGER PRIMARY KEY
+        , ID_USUARIO INTEGER NOT NULL
+        , ID_CORTE_APP INTEGER NOT NULL
+        , ID_CONTRATO INTEGER NOT NULL
+        , CL_RUTA TEXT
+        , NB_MUNICIPIO TEXT
+        , NB_COLONIA TEXT NOT NULL
+        , NB_CALLE TEXT NOT NULL
+        , NO_EXTERIOR TEXT NOT NULL
+        , NO_INTERIOR TEXT
+        , CL_CODIGO_POSTAL TEXT
+        , MN_ADEUDO REAL DEFAULT 0.0 NOT NULL
+        , NO_MESES_ADEUDO INTEGER DEFAULT 0
+        , DS_FOTOS TEXT
+        , DS_OBSERVACIONES TEXT
+        , FG_ESTADO INTEGER DEFAULT 0 NOT NULL
+      );
+    ''');
   }
   
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {    //Función que se ejecuta cuando el número de versión es mayor al instalado.

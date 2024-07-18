@@ -2,7 +2,12 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
+import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
+import 'package:interapas_gen_app/data/api/API_CORTE.dart';
+import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 import 'package:interapas_gen_app/data/enumerados.dart';
+import 'package:interapas_gen_app/utilities/popup.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
 
 class MenuCortes_Screen extends StatefulWidget{
@@ -29,7 +34,48 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       fgCargando = true;
     });
 
-    await Future.delayed(const Duration(seconds: 3));
+    List<API_CORTE>? consultaApi = await AccesoDatos.obtieneCortes();
+
+    if(consultaApi != null){
+      if(consultaApi.isNotEmpty){   //Si encontró asignaciones pendientes
+
+        List<K_CORTE>? consultaLocales = await AccesoDatos.obtieneCortesLocales();
+
+        if(consultaLocales != null){
+          
+          List<API_CORTE> nuevasAsignaciones = List.empty(growable: true);
+
+          for (API_CORTE corte in consultaApi) {
+            
+            Iterable<K_CORTE> asignacion = consultaLocales.where((w) 
+              => w.ID_USUARIO == OperacionesPreferencias.consultarIdEmpleado() && w.ID_CORTE_APP == corte.ID_CORTE_APP);
+
+            if(asignacion.isEmpty){
+              nuevasAsignaciones.add(corte);
+            }
+            //Si la encuentra, entonces no hace nada, porque ya la tiene descargada
+          }
+
+          bool respuesta = await AccesoDatos.insertaCortesNuevos(nuevasAsignaciones);
+
+          if(!respuesta){
+            if(context.mounted){
+              mensajeSimpleOK("Hubo un problema intentando guardar la información.", context);
+            }
+          }
+
+        } else{
+          if(context.mounted){
+            mensajeSimpleOK("¡Hubo un problema con los datos guardados!", context);
+          }
+        }
+      }
+    } else {
+      if(context.mounted){
+        mensajeSimpleOK("No se pudieron obtener nuevas asignaciones", context);
+      }
+    }
+    
 
     setState(() {
       fgCargando = false;

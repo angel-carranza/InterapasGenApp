@@ -2,7 +2,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, camel_case_types
 
 class API_CORTE {
-  int ID_CORTE;
+  int ID_CORTE_APP;
   int ID_CONTRATO;
   String? CL_RUTA;
   String NB_MUNICIPIO;
@@ -15,7 +15,7 @@ class API_CORTE {
   int MESES_ADEUDO;
   
   API_CORTE(
-    this.ID_CORTE,
+    this.ID_CORTE_APP,
     this.ID_CONTRATO,
     this.CL_RUTA,
     this.NB_MUNICIPIO,
@@ -28,7 +28,7 @@ class API_CORTE {
     this.MESES_ADEUDO,
   );
 
-   static API_CORTE fromJsonAPI(Map<String, Object?> json) => API_CORTE(
+  static API_CORTE fromJsonAPI(Map<String, Object?> json) => API_CORTE(
     json["iD_CORTE_APP"] as int,
     json["iD_CONTRATO"] as int,
     json["cL_RUTA"] as String,
