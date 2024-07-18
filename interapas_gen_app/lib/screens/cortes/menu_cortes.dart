@@ -20,7 +20,7 @@ class MenuCortes_Screen extends StatefulWidget{
 
 class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
   bool fgCargando = true;
-  agrupaciones agrupadoActual = agrupaciones.colonias;
+  agrupaciones agrupadoActual = agrupaciones.colonia;
 
   @override
   void initState() {
@@ -47,8 +47,8 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
 
           for (API_CORTE corte in consultaApi) {
             
-            Iterable<K_CORTE> asignacion = consultaLocales.where((w) 
-              => w.ID_USUARIO == OperacionesPreferencias.consultarIdEmpleado() && w.ID_CORTE_APP == corte.ID_CORTE_APP);
+            List<K_CORTE> asignacion = consultaLocales.where((w) 
+              => w.ID_USUARIO == OperacionesPreferencias.consultarIdUsuario() && w.ID_CORTE_APP == corte.ID_CORTE_APP).toList();
 
             if(asignacion.isEmpty){
               nuevasAsignaciones.add(corte);
@@ -76,6 +76,7 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       }
     }
     
+    
 
     setState(() {
       fgCargando = false;
@@ -92,13 +93,13 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       emptySelectionAllowed: false,
       segments: <ButtonSegment<agrupaciones>>[
         ButtonSegment(
-          value: agrupaciones.colonias,
+          value: agrupaciones.colonia,
           label: const Text("Colonias"),
           icon: const Icon(Icons.location_city_rounded),
           enabled: !fgCargando,   //Se desactiva mientras carga para evitar dobles llamadas
         ),
         ButtonSegment(
-          value: agrupaciones.calles,
+          value: agrupaciones.calle,
           label: const Text("Calles"),
           icon: const Icon(Icons.other_houses_outlined),
           enabled: !fgCargando,   //Se desactiva mientras carga para evitar dobles llamadas
@@ -134,6 +135,7 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
           : ( (elementos < 1) ? <Widget>[const Center(child: Text("Contenido no disponible por el momento.")) ]
             : <Widget>[
               btnAgrupaciones,
+
               Expanded(child: Container()),
             ]
           )
