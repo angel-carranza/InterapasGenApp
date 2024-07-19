@@ -11,6 +11,9 @@ import 'package:http/http.dart' as http;
 import 'package:interapas_gen_app/data/api/API_CORTE.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
+import 'package:interapas_gen_app/data/enumerados.dart';
+
+import '../data/T_GRUPO_CORTES.dart';
 
 //Clase con todas las funciones intermediarias a 
 // los diferentes tipos de datos que maneja la aplicación.
@@ -164,6 +167,16 @@ class AccesoDatos {
   }
 
   static Future<bool> insertaCortesNuevos(List<API_CORTE> nuevos) async => await operacionesBD.insertarCortes(nuevos);
+
+  static Future<List<T_GRUPO_CORTES>?> obtieneGruposCortes(agrupaciones agrupacion) async {
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0) {
+      return await operacionesBD.obtenerGruposCortes(agrupacion, idUsuario);
+    } else {
+      return null;
+    }
+  }
 
   //========================================//
 

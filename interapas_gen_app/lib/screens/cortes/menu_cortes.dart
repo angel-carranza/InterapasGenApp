@@ -8,7 +8,11 @@ import 'package:interapas_gen_app/data/api/API_CORTE.dart';
 import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 import 'package:interapas_gen_app/data/enumerados.dart';
 import 'package:interapas_gen_app/utilities/popup.dart';
+import 'package:interapas_gen_app/widgets/cortes/grupo_cortes.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
+import 'package:interapas_gen_app/widgets/mensaje_fondo.dart';
+
+import '../../data/T_GRUPO_CORTES.dart';
 
 class MenuCortes_Screen extends StatefulWidget{
   
@@ -21,6 +25,7 @@ class MenuCortes_Screen extends StatefulWidget{
 class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
   bool fgCargando = true;
   agrupaciones agrupadoActual = agrupaciones.colonia;
+  List<T_GRUPO_CORTES> grupos = List.empty(growable: true);
 
   @override
   void initState() {
@@ -76,7 +81,15 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       }
     }
     
-    
+    var aux = await AccesoDatos.obtieneGruposCortes(agrupadoActual);
+
+    if(aux != null){
+      grupos = aux;
+    } else {
+      if(context.mounted){
+        mensajeSimpleOK("Hubo un error encontrando las asignaciones. Intenté sincronizar.", context);
+      }
+    }
 
     setState(() {
       fgCargando = false;
@@ -85,35 +98,37 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    int elementos = 10;
 
     //Boton para cambiar agrupación
-    Widget btnAgrupaciones = SegmentedButton<agrupaciones>(
-      multiSelectionEnabled: false,
-      emptySelectionAllowed: false,
-      segments: <ButtonSegment<agrupaciones>>[
-        ButtonSegment(
-          value: agrupaciones.colonia,
-          label: const Text("Colonias"),
-          icon: const Icon(Icons.location_city_rounded),
-          enabled: !fgCargando,   //Se desactiva mientras carga para evitar dobles llamadas
-        ),
-        ButtonSegment(
-          value: agrupaciones.calle,
-          label: const Text("Calles"),
-          icon: const Icon(Icons.other_houses_outlined),
-          enabled: !fgCargando,   //Se desactiva mientras carga para evitar dobles llamadas
-        ),
-      ],
-      selected: <agrupaciones>{agrupadoActual},
-      onSelectionChanged: (Set<agrupaciones> seleccionNueva) {  //Al actualizar
-        setState(() {
-          agrupadoActual = seleccionNueva.first;
-        });
-
-        _sincronizarCortes();
-
-      },
+    Widget btnAgrupaciones = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 0.0),
+      child: SegmentedButton<agrupaciones>(
+        multiSelectionEnabled: false,
+        emptySelectionAllowed: false,
+        segments: <ButtonSegment<agrupaciones>>[
+          ButtonSegment(
+            value: agrupaciones.colonia,
+            label: const Text("Colonias"),
+            icon: const Icon(Icons.location_city_rounded),
+            enabled: !fgCargando && grupos.isNotEmpty,   //Se desactiva mientras carga para evitar dobles llamadas
+          ),
+          ButtonSegment(
+            value: agrupaciones.calle,
+            label: const Text("Calles"),
+            icon: const Icon(Icons.other_houses_outlined),
+            enabled: !fgCargando && grupos.isNotEmpty,   //Se desactiva mientras carga para evitar dobles llamadas
+          ),
+        ],
+        selected: <agrupaciones>{agrupadoActual},
+        onSelectionChanged: (Set<agrupaciones> seleccionNueva) {  //Al actualizar
+          setState(() {
+            agrupadoActual = seleccionNueva.first;
+          });
+      
+          _sincronizarCortes();
+      
+        },
+      ),
     );
 
     return Scaffold(
@@ -132,11 +147,26 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
           const Loader(textoInformativo: "Consultando..."),
           Expanded(child: Container()),
         ]  
-          : ( (elementos < 1) ? <Widget>[const Center(child: Text("Contenido no disponible por el momento.")) ]
+          : ( (grupos.isEmpty) ? <Widget>[
+            btnAgrupaciones,
+            Expanded(child: Container()),
+            const MensajeFondo(mensaje: "No se encontraron asignaciones, intenta usar el botón para sincronizar."),
+            Expanded(child: Container()),
+          ]
             : <Widget>[
               btnAgrupaciones,
-
-              Expanded(child: Container()),
+              Expanded(
+                child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: grupos.length,
+                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.only(
+                  top: 12.0,
+                  bottom: kFloatingActionButtonMargin + 56.0,
+                ),
+                itemBuilder: (context, index) => GrupoCortes(grupos[index])
+                ),
+              ),
             ]
           )
       ),

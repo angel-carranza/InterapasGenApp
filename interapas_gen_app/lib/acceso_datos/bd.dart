@@ -3,12 +3,15 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:interapas_gen_app/acceso_datos/base_datos.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
+import 'package:interapas_gen_app/data/enumerados.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../data/T_GRUPO_CORTES.dart';
 import '../data/api/API_CORTE.dart';
 import '../data/bd/K_CORTE.dart';
 
@@ -224,6 +227,41 @@ class operacionesBD {
       } on Exception catch(_){
         resultado = false;
       }
+    }
+
+    return resultado;
+  }
+
+  static Future<List<T_GRUPO_CORTES>> obtenerGruposCortes(agrupaciones tipo, int idUsuario) async {
+    Database local = await BaseDatos.bd.database;
+
+    String columnaAgrupar;
+
+    switch(tipo){
+      case agrupaciones.calle:
+        columnaAgrupar = "NB_CALLE";
+        break;
+      case agrupaciones.colonia:
+        columnaAgrupar = "NB_COLONIA";
+        break;
+    }
+
+    List<T_GRUPO_CORTES> resultado = List.empty(growable: true);
+
+    final maps = await local.rawQuery('''
+      SELECT
+        $columnaAgrupar AS NB_GRUPO
+        , COUNT(ID_CORTE) AS CUENTA
+
+        FROM K_CORTE
+
+        WHERE ID_USUARIO = $idUsuario
+
+        GROUP BY $columnaAgrupar
+    ''');
+
+    for(var map in maps){
+      resultado.add(T_GRUPO_CORTES(tipo, (map["NB_GRUPO"] as String).toUpperCase(), map["CUENTA"] as int));
     }
 
     return resultado;
