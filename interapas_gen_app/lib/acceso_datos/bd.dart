@@ -4,7 +4,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:interapas_gen_app/acceso_datos/base_datos.dart';
+import 'package:interapas_gen_app/services/base_datos.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
@@ -261,9 +261,38 @@ class operacionesBD {
     ''');
 
     for(var map in maps){
-      resultado.add(T_GRUPO_CORTES(tipo, (map["NB_GRUPO"] as String).toUpperCase(), map["CUENTA"] as int));
+      resultado.add(T_GRUPO_CORTES(tipo, (map["NB_GRUPO"] as String), map["CUENTA"] as int));
     }
 
     return resultado;
   }
+
+  static Future<List<K_CORTE>> obtenerCortesDeGrupo(int idUsuario, agrupaciones tipo, String clave) async {
+    List<K_CORTE> resultado = List.empty(growable: true);
+    Database local = await BaseDatos.bd.database;
+
+    String columnaGrupo;
+
+    switch(tipo){
+      case agrupaciones.colonia:
+        columnaGrupo = "NB_COLONIA";
+        break;
+      case agrupaciones.calle:
+        columnaGrupo = "NB_CALLE";
+        break;
+    }
+
+    final maps = await local.query(
+      "K_CORTE",
+      where: "ID_USUARIO = ? AND $columnaGrupo = ? ",
+      whereArgs: [idUsuario, clave],
+    );
+
+    for (var map in maps){
+      resultado.add(K_CORTE.fromJson(map));
+    }
+
+    return resultado;
+  }
+
 }
