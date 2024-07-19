@@ -36,8 +36,10 @@ class Inicio_Screen extends StatelessWidget {
     });
 
     return const Scaffold(
-      body: Loader(
-        textoInformativo: "Cargando datos..."
+      body: SafeArea(
+        child: Loader(
+          textoInformativo: "Cargando datos..."
+        ),
       ),
     );
   }

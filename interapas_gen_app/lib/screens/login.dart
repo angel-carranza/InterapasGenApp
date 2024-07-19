@@ -116,91 +116,93 @@ class _Login_ScreenState extends State<Login_Screen> {
     }
 
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18.0,
-            vertical: 12.0,
-          ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: _accesoConfig,
-                      icon: const Icon(
-                        Icons.rss_feed_rounded,
-                        size: 30.0,
-                      )
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('lib/assets/img/logo.png'),
-                    const SizedBox(height: 36.0,),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text("Usuario"),
-                      ),
-                      validator: (value) {
-                        if(value == null || value.isEmpty || value.trim().length <= 1) {  //Valida que haya escrito algo.
-                          return "Este campo es requerido.";
-                        }
-                        return null;  //Todo bien con el valor introducido en este campo.
-                      },
-                      onSaved: (value) {    //Cuando el formulario hace el evento de guardar los valores de los campos.
-                        _usuarioIngresado = value!;
-                      },
-                      inputFormatters: [MayusculasFormatter()],   //Usa una clase y su método para siempre hacer mayuscula lo introducido en este campo.
-                    ),
-                    const SizedBox(height: 12,),
-                    TextFormField(
-                      obscureText: !fgMostrarContrasena,
-                      obscuringCharacter: '*',
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      controller: ctrlPassword,
-                      decoration: InputDecoration(
-                        label: const Text("Contraseña"),
-                        suffixIcon: GestureDetector(  //Icono dentro del campo
-                          child: Icon(iconoMostrar),
-                          onTap: () {
-                            setState(() {
-                              fgMostrarContrasena = !fgMostrarContrasena;
-                              if(fgMostrarContrasena) {
-                                iconoMostrar = Icons.visibility; 
-                              } else {
-                                iconoMostrar = Icons.visibility_off;
-                              }
-                            });
-                          },
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 18.0,
+              vertical: 12.0,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: _accesoConfig,
+                        icon: const Icon(
+                          Icons.rss_feed_rounded,
+                          size: 30.0,
                         )
                       ),
-                      validator: (value) {if(value == null || value.isEmpty || value.trim().length <= 1) {  //Valida que haya escrito algo.
-                          return "Este campo es requerido.";
-                        }
-                        return null;  //Todo bien con el valor introducido en este campo.
-                      },
-                      onSaved: (value) {     //Cuando el formulario hace el evento de guardar los valores de los campos.
-                        _passwordIngresado = value!;
-                        ctrlPassword.clear();   //Siempre borra la contraseña al intentar ingresar, en caso de que no pueda acceder.
-                      },
-                    ),
-                    const SizedBox(height: 30.0,),
-                    botonLogin,
-                  ],
-                ),
-                const Spacer(),
-                Container(),
-              ],
-            )
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('lib/assets/img/logo.png'),
+                      const SizedBox(height: 36.0,),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text("Usuario"),
+                        ),
+                        validator: (value) {
+                          if(value == null || value.isEmpty || value.trim().length <= 1) {  //Valida que haya escrito algo.
+                            return "Este campo es requerido.";
+                          }
+                          return null;  //Todo bien con el valor introducido en este campo.
+                        },
+                        onSaved: (value) {    //Cuando el formulario hace el evento de guardar los valores de los campos.
+                          _usuarioIngresado = value!;
+                        },
+                        inputFormatters: [MayusculasFormatter()],   //Usa una clase y su método para siempre hacer mayuscula lo introducido en este campo.
+                      ),
+                      const SizedBox(height: 12,),
+                      TextFormField(
+                        obscureText: !fgMostrarContrasena,
+                        obscuringCharacter: '*',
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        controller: ctrlPassword,
+                        decoration: InputDecoration(
+                          label: const Text("Contraseña"),
+                          suffixIcon: GestureDetector(  //Icono dentro del campo
+                            child: Icon(iconoMostrar),
+                            onTap: () {
+                              setState(() {
+                                fgMostrarContrasena = !fgMostrarContrasena;
+                                if(fgMostrarContrasena) {
+                                  iconoMostrar = Icons.visibility; 
+                                } else {
+                                  iconoMostrar = Icons.visibility_off;
+                                }
+                              });
+                            },
+                          )
+                        ),
+                        validator: (value) {if(value == null || value.isEmpty || value.trim().length <= 1) {  //Valida que haya escrito algo.
+                            return "Este campo es requerido.";
+                          }
+                          return null;  //Todo bien con el valor introducido en este campo.
+                        },
+                        onSaved: (value) {     //Cuando el formulario hace el evento de guardar los valores de los campos.
+                          _passwordIngresado = value!;
+                          ctrlPassword.clear();   //Siempre borra la contraseña al intentar ingresar, en caso de que no pueda acceder.
+                        },
+                      ),
+                      const SizedBox(height: 30.0,),
+                      botonLogin,
+                    ],
+                  ),
+                  const Spacer(),
+                  Container(),
+                ],
+              )
+            ),
           ),
         ),
       ),

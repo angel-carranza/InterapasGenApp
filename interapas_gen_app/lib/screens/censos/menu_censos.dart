@@ -15,7 +15,7 @@ class MenuCensos_Screen extends StatelessWidget{
         title: const Text("Censos"),
         actions: const [],
       ),
-      body: const Center(child: Text("Contenido no disponible por el momento.")),
+      body: const SafeArea(child: Center(child: Text("Contenido no disponible por el momento."))),
       bottomNavigationBar: BottomAppBar(
         child: Container(height: 30.0,),
       ),

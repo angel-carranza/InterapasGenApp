@@ -136,39 +136,41 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
         title: const Text("Cortes"),
         actions: const [],
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: fgCargando?
-        <Widget>[  //Mientras está cargando
-          btnAgrupaciones,
-          Expanded(child: Container()),
-          const Loader(textoInformativo: "Consultando..."),
-          Expanded(child: Container()),
-        ]  
-          : ( (grupos.isEmpty) ? <Widget>[
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: fgCargando?
+          <Widget>[  //Mientras está cargando
             btnAgrupaciones,
             Expanded(child: Container()),
-            const MensajeFondo(mensaje: "No se encontraron asignaciones, intenta usar el botón para sincronizar."),
+            const Loader(textoInformativo: "Consultando..."),
             Expanded(child: Container()),
-          ]
-            : <Widget>[
+          ]  
+            : ( (grupos.isEmpty) ? <Widget>[
               btnAgrupaciones,
-              Expanded(
-                child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: grupos.length,
-                scrollDirection: Axis.vertical,
-                padding: const EdgeInsets.only(
-                  top: 12.0,
-                  bottom: kFloatingActionButtonMargin + 56.0,
-                ),
-                itemBuilder: (context, index) => GrupoCortes(grupos[index])
-                ),
-              ),
+              Expanded(child: Container()),
+              const MensajeFondo(mensaje: "No se encontraron asignaciones, intenta usar el botón para sincronizar."),
+              Expanded(child: Container()),
             ]
-          )
+              : <Widget>[
+                btnAgrupaciones,
+                Expanded(
+                  child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: grupos.length,
+                  scrollDirection: Axis.vertical,
+                  padding: const EdgeInsets.only(
+                    top: 12.0,
+                    bottom: kFloatingActionButtonMargin + 56.0,
+                  ),
+                  itemBuilder: (context, index) => GrupoCortes(grupos[index])
+                  ),
+                ),
+              ]
+            )
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(height: 30.0,),

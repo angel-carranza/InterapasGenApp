@@ -102,7 +102,7 @@ class _Configuracion_ScreenState extends State<Configuracion_Screen> {
 
     return Scaffold(
       appBar: AppBar(actions: const []),
-      body: contenido,
+      body: SafeArea(child: contenido),
     );
   }
 }
