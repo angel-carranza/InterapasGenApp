@@ -181,12 +181,24 @@ class AccesoDatos {
   static Future<List<K_CORTE>?> obtieneCortesGrupoLocal(agrupaciones tipo, String clave) async {
     int idUsuario = OperacionesPreferencias.consultarIdUsuario();
 
-    if(idUsuario >  0) {
+    if(idUsuario > 0) {
       return await operacionesBD.obtenerCortesDeGrupo(idUsuario, tipo, clave);
     } else {
       return null;
     }
   }
+
+  static Future<bool> agregaFotoCorte(int idCorte, String dirNuevaFoto) async {
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0) {
+      return await operacionesBD.agregarFotoCorte(idUsuario, idCorte, dirNuevaFoto);
+    } else{
+      return false;
+    }
+
+  }
+
   //========================================//
 
 }

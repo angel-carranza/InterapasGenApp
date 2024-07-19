@@ -295,4 +295,34 @@ class operacionesBD {
     return resultado;
   }
 
+  static Future<bool> agregarFotoCorte(int idUsuario, int idCorte, String dirNuevaFoto) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+
+    var maps = await local.query(
+      "K_CORTE",
+      columns: ["DS_FOTOS"],
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
+    );
+
+    String valorAnterior = "";
+    if(maps.isNotEmpty) {
+      valorAnterior = (maps.first["DS_FOTOS"] as String?) ?? "";
+    }
+
+    int respuesta = await local.update(
+      "K_CORTE",
+      {"DS_FOTOS" : "$valorAnterior@$dirNuevaFoto"},
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
+    );
+
+    if(respuesta > 0){
+      resultado = true;
+    }
+
+    return resultado;
+  }
+
 }

@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
 import 'package:interapas_gen_app/screens/camara.dart';
 
 class FotoCorte extends StatelessWidget {
@@ -11,7 +12,7 @@ class FotoCorte extends StatelessWidget {
   const FotoCorte({super.key, required this.idCorte, required this.dirImagen});
 
   Future<bool> _guardarFoto(String ubicacion) async{
-    return false;
+    return await AccesoDatos.agregaFotoCorte(idCorte, ubicacion);
   }
 
   @override
