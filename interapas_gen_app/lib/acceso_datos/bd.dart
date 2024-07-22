@@ -3,7 +3,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:interapas_gen_app/services/base_datos.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
@@ -313,12 +312,90 @@ class operacionesBD {
 
     int respuesta = await local.update(
       "K_CORTE",
-      {"DS_FOTOS" : "$valorAnterior@$dirNuevaFoto"},
+      {"DS_FOTOS" : "${valorAnterior.isEmpty? "" : "$valorAnterior@"}$dirNuevaFoto"},
       where: "ID_USUARIO = ? AND ID_CORTE = ? ",
       whereArgs: [idUsuario, idCorte],
     );
 
     if(respuesta > 0){
+      resultado = true;
+    }
+
+    return resultado;
+  }
+
+  static Future<List<String>> obtenerFotosObservaciones(int idUsuario, int idCorte) async {
+    List<String> resultado = List.empty(growable: true);
+    Database local = await BaseDatos.bd.database;
+
+    var maps = await local.query(
+      "K_CORTE",
+      columns: [
+        "DS_FOTOS",
+        "DS_OBSERVACIONES"
+      ],
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
+    );
+
+    if(maps.isNotEmpty){
+      resultado.add((maps.first["DS_FOTOS"] as String?) ?? "");
+      resultado.add((maps.first["DS_OBSERVACIONES"] as String?) ?? "");
+    }
+    
+    return resultado;
+  }
+
+  static Future<bool> eliminarFotoCorte(int idUsuario, int idCorte, String dirFoto) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+
+    var maps = await local.query(
+      "K_CORTE",
+      columns: ["DS_FOTOS"],
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
+    );
+
+    String valorAnterior = "";
+    if(maps.isNotEmpty) {
+      valorAnterior = (maps.first["DS_FOTOS"] as String?) ?? "";
+    }
+
+    valorAnterior = valorAnterior.replaceAll(dirFoto, "");
+    valorAnterior = valorAnterior.replaceAll("@@", "@");
+    if(valorAnterior == "@") valorAnterior = "";
+    if(valorAnterior.length > 2){
+      if(valorAnterior[0] == '@') valorAnterior = valorAnterior.substring(1);
+      if(valorAnterior[valorAnterior.length - 1] == '@') valorAnterior = valorAnterior.substring(0, valorAnterior.length-2);
+    }
+
+    int respuesta = await local.update(
+      "K_CORTE",
+      {"DS_FOTOS" : valorAnterior},
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
+    );
+
+    if(respuesta > 0){
+      resultado = true;
+    }
+
+    return resultado;
+  }
+
+  static Future<bool> guardarCorte(int idUsuario, K_CORTE corte) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+    
+    int respuesta = await local.update(
+      "K_CORTE",
+      corte.toJson(),
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, corte.ID_CORTE]
+    );
+
+    if(respuesta > 0) {
       resultado = true;
     }
 

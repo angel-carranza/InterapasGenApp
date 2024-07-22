@@ -199,6 +199,49 @@ class AccesoDatos {
 
   }
 
+  static Future<List<String>?> obtieneFotosObservacionesCorte(int idCorte) async {
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0){
+      return await operacionesBD.obtenerFotosObservaciones(idUsuario, idCorte);
+    } else {
+      return null;
+    }
+  }
+
+  static Future<bool> eliminaFotoCorte(int idCorte, String dirFoto) async {
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0) {
+      return await operacionesBD.eliminarFotoCorte(idUsuario, idCorte, dirFoto);
+    } else{
+      return false;
+    }
+  }
+
+  static Future<int> guardarEnviarCorte(K_CORTE corte) async {
+    int resultado = 0;
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0) {
+      bool respuesta = await operacionesBD.guardarCorte(idUsuario, corte);
+
+      if(respuesta) resultado = 1;
+    }
+
+    return resultado;
+  }
+
+  static Future<bool> guardarCorte(K_CORTE corte) async {
+    bool resultado = false;
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0){
+      return await operacionesBD.guardarCorte(idUsuario, corte);
+    }
+
+    return resultado;
+  }
   //========================================//
 
 }

@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
 import 'package:interapas_gen_app/screens/camara.dart';
+import 'package:interapas_gen_app/utilities/popup.dart';
 
 class FotoCorte extends StatelessWidget {
   final int idCorte;
   final String dirImagen;
+  final callbackFunction;
+  final saveFunction;
 
-  const FotoCorte({super.key, required this.idCorte, required this.dirImagen});
+  const FotoCorte({super.key, required this.idCorte, required this.dirImagen, this.callbackFunction, this.saveFunction});
 
   Future<bool> _guardarFoto(String ubicacion) async{
     return await AccesoDatos.agregaFotoCorte(idCorte, ubicacion);
@@ -26,12 +29,18 @@ class FotoCorte extends StatelessWidget {
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)))
         ),
         onPressed: () async {
-          await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Camara(guardarFoto: _guardarFoto)));
+          await saveFunction();   //Guarda las observaciones
+
+          if(context.mounted){
+            await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Camara(guardarFoto: _guardarFoto)));
+          }
+          
+          callbackFunction();
         },
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.camera_alt_rounded,
               size: 26.0,
             ),
@@ -68,10 +77,13 @@ class FotoCorte extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () async {
+                  await saveFunction();
+
+                  if(!context.mounted) return;
 
                   showDialog(
                     context: context
-                    , builder: (BuildContext context) =>AlertDialog(
+                    , builder: (BuildContext context) => AlertDialog(
                       title: const Text("Eliminar"),
                       content: const Text(
                         "¿Seguro que quieres borrar esta foto?",
@@ -79,7 +91,18 @@ class FotoCorte extends StatelessWidget {
                       ),
                       actions: [
                         TextButton(
-                          onPressed: () { },
+                          onPressed: () async {
+                            if(await AccesoDatos.eliminaFotoCorte(idCorte, dirImagen)){
+                              if(context.mounted){
+                                Navigator.of(context).pop();
+                              }
+                              callbackFunction();
+                            } else {
+                              if(context.mounted) {
+                                mensajeSimpleOK("Hubo un error al intentar realizar la acción.", context);
+                              }
+                            }
+                          },
                           child: const Text("Sí"),
                         ),
                         TextButton(
