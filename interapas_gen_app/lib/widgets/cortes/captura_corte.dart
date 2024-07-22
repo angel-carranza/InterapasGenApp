@@ -116,6 +116,8 @@ class _CapturaCorteState extends State<CapturaCorte> {
               if(widget.corte.DS_FOTOS != null){
                 if(widget.corte.DS_FOTOS != ""){
                   widget.corte.FG_ESTADO = 1;    //Estado de corte guardado
+                  widget.corte.FE_CAPTURA = DateTime.now();
+
                   int respuesta = await AccesoDatos.guardarEnviarCorte(widget.corte);
 
                   if(respuesta > 0){
@@ -162,6 +164,7 @@ class _CapturaCorteState extends State<CapturaCorte> {
                     TextButton(
                       onPressed: () async {
                         widget.corte.FG_ESTADO = -1;    //Estado de cancelado
+                        widget.corte.FE_CAPTURA = DateTime.now();
                         int respuesta = await AccesoDatos.guardarEnviarCorte(widget.corte);
 
                         if(respuesta > 0){

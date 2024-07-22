@@ -20,6 +20,7 @@ class K_CORTE {
   String? DS_FOTOS;
   String? DS_OBSERVACIONES;
   int FG_ESTADO;
+  DateTime? FE_CAPTURA;
 
   K_CORTE(
     this.ID_CORTE,
@@ -38,6 +39,7 @@ class K_CORTE {
     this.DS_FOTOS,
     this.DS_OBSERVACIONES,
     this.FG_ESTADO,
+    this.FE_CAPTURA,
   );
 
   static K_CORTE fromJson(Map<String, Object?> json) => K_CORTE(
@@ -57,7 +59,7 @@ class K_CORTE {
     json["DS_FOTOS"] as String?,
     json["DS_OBSERVACIONES"] as String?,
     json["FG_ESTADO"] as int,
-
+    json["FE_CAPTURA"] != null ? DateTime.parse(json["FE_CAPTURA"].toString()) : null
   );
 
   static Map<String, Object?> fromAPItoJson(int idUsuario, API_CORTE corte) => {
@@ -92,5 +94,6 @@ class K_CORTE {
     "DS_FOTOS" : DS_FOTOS,
     "DS_OBSERVACIONES" : DS_OBSERVACIONES,
     "FG_ESTADO" : FG_ESTADO,
+    "FE_CAPTURA" : FE_CAPTURA?.toIso8601String(),
   };
 }

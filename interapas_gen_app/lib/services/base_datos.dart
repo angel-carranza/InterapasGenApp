@@ -66,6 +66,7 @@ class BaseDatos {
         , DS_FOTOS TEXT
         , DS_OBSERVACIONES TEXT
         , FG_ESTADO INTEGER DEFAULT 0 NOT NULL
+        , FE_CAPTURA TEXT
       );
     ''');
   }
