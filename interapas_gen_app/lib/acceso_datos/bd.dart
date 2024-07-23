@@ -402,4 +402,21 @@ class operacionesBD {
     return resultado;
   }
 
+  static Future<bool> eliminarEnviado(int idUsuario, K_CORTE corte) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+
+    int respuesta = await local.delete(
+      "K_CORTE",
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, corte.ID_CORTE],
+    );
+
+    if(respuesta > 0) {
+      resultado = true;
+    }
+
+    return resultado;
+  }
+
 }

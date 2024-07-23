@@ -117,4 +117,28 @@ class cortesAPI {
     return response;
   }
 
+  Future<http.Response> setCorte(Object? cuerpo) async {
+    http.Response response = http.Response("", 404);
+    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
+
+    if(await comprobarConexion()){
+      final urlPost = Uri.http(servidorAPI, "$urlApi/Cortes/SetCorte");
+
+      var cuerpoJson = jsonEncode(cuerpo);
+
+      response = await http.post(
+        urlPost,
+        headers: <String, String> {
+          "Authorization" : token,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: cuerpoJson,
+      );
+    } else {
+      response = http.Response("Hubo un error de conexión.", 902);
+    }
+
+    return response;
+  }
+
 }

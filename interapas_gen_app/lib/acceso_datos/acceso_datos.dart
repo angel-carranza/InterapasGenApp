@@ -9,6 +9,7 @@ import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:http/http.dart' as http;
 import 'package:interapas_gen_app/data/api/API_CORTE.dart';
+import 'package:interapas_gen_app/data/api/API_CORTE_ENVIO.dart';
 import 'package:interapas_gen_app/data/api/API_USUARIO.dart';
 import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 import 'package:interapas_gen_app/data/enumerados.dart';
@@ -77,6 +78,33 @@ class AccesoDatos {
       
     }
 
+    return resultado;
+  }
+
+  static Future<bool> enviaCorte(K_CORTE corte) async {
+    bool resultado = false;
+
+    try{
+      cortesAPI api = cortesAPI();
+
+      int idEmpleado = OperacionesPreferencias.consultarIdEmpleado();
+
+      if(idEmpleado > 0) {
+        API_CORTE_ENVIO corteEnvio = await API_CORTE_ENVIO.fromCorte(corte, idEmpleado);
+
+        http.Response respuesta = await api.setCorte(corteEnvio.toJson()); 
+
+        switch(respuesta.statusCode) {
+          case 200:
+            resultado = true;
+          default:
+            resultado = false;
+        }
+      }
+    } on Exception catch (_) {
+      resultado = false;
+    }
+    
     return resultado;
   }
   //========================================//
@@ -226,7 +254,21 @@ class AccesoDatos {
     if(idUsuario > 0) {
       bool respuesta = await operacionesBD.guardarCorte(idUsuario, corte);
 
-      if(respuesta) resultado = 1;
+      if(respuesta) {
+        resultado = 1;  //Sí guardó
+
+        respuesta = await enviaCorte(corte);
+
+        if(respuesta){
+          resultado = 2;  //Sí envío
+
+          respuesta = await operacionesBD.eliminarEnviado(idUsuario, corte);
+
+          if(respuesta){
+            resultado = 3;
+          }
+        }
+      }
     }
 
     return resultado;
@@ -238,6 +280,27 @@ class AccesoDatos {
 
     if(idUsuario > 0){
       return await operacionesBD.guardarCorte(idUsuario, corte);
+    }
+
+    return resultado;
+  }
+
+  static Future<int> enviarCorteGuardado(K_CORTE corte) async {
+    int resultado = 0;
+    int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+    if(idUsuario > 0) {
+      bool respuesta = await enviaCorte(corte);
+
+      if(respuesta){
+        resultado = 2;  //Sí envío
+
+        respuesta = await operacionesBD.eliminarEnviado(idUsuario, corte);
+
+        if(respuesta){
+          resultado = 3;
+        }
+      }
     }
 
     return resultado;

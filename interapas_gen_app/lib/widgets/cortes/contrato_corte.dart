@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 import 'package:interapas_gen_app/data/enumerados.dart';
 import 'package:interapas_gen_app/widgets/cortes/captura_corte.dart';
@@ -50,11 +51,22 @@ class _ContratoCorteState extends State<ContratoCorte> {
       );
     }
 
+    Color fondo = Colors.white;
+    switch(widget.corte.FG_ESTADO){
+      case 1:
+        fondo = Colors.lightBlue;
+        break;
+      case 2:
+        fondo = Colors.pink;
+        break;
+    }
+
     return GestureDetector(
       onTap: () async {
         await abrirInterfazCaptura();
       },
       child: Card(
+        color: fondo,
         elevation: 10.0,
         shadowColor: const Color.fromARGB(49, 255, 115, 115),
         shape: const LinearBorder(),

@@ -55,6 +55,7 @@ class _ListaCortesState extends State<ListaCortes> {
   @override
   Widget build(BuildContext context) {
     int numeroCortes = listaCortes.length;
+    int numeroGuardados = listaCortes.where((w) => w.FG_ESTADO != 0).toList().length;
 
     return Scaffold(
       appBar: AppBar(
@@ -83,10 +84,26 @@ class _ListaCortesState extends State<ListaCortes> {
                     shrinkWrap: true,
                     itemCount: numeroCortes,
                     scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.only(bottom: 60.0),
+                    padding: const EdgeInsets.only(bottom: 60.0),
                     itemBuilder: (context, index) => ContratoCorte(tipoGrupo: widget.tipo, corte: listaCortes[index])
                   ),
+                ),
+                Container(height: 12.0,),
+                (numeroGuardados > 0) ? 
+                ElevatedButton(
+                  onPressed: () async {
+                    List<K_CORTE> listaGuardados = listaCortes.where((w) => w.FG_ESTADO != 0).toList();
+
+                    for(K_CORTE corte in listaGuardados){
+                      await AccesoDatos.enviarCorteGuardado(corte);
+                    }
+
+                    _cargarContratos();
+                  },
+                  child: const Text("Enviar capturados"),
                 )
+                : Container(height: 0.0,),
+                Container(height: 24.0,)
               ]
               : [
                 Expanded(child: Container()),

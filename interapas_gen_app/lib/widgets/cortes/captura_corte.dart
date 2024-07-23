@@ -126,7 +126,10 @@ class _CapturaCorteState extends State<CapturaCorte> {
                     }
 
                     if(respuesta > 1){
-                      1+2;
+                      if(context.mounted){
+                        Navigator.of(context).pop();
+                        mensajeSimpleOK("Enviado con éxito", context);
+                      }
                     } else {
                       if(context.mounted){
                         mensajeSimpleOK("Se guardó pero no se pudo enviar, intente más tarde.", context);
