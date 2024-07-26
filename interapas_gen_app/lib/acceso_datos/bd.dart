@@ -3,6 +3,7 @@
 
 import 'dart:convert';
 
+import 'package:interapas_gen_app/data/api/API_ADEUDO.dart';
 import 'package:interapas_gen_app/services/base_datos.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
@@ -410,6 +411,27 @@ class operacionesBD {
       "K_CORTE",
       where: "ID_USUARIO = ? AND ID_CORTE = ? ",
       whereArgs: [idUsuario, corte.ID_CORTE],
+    );
+
+    if(respuesta > 0) {
+      resultado = true;
+    }
+
+    return resultado;
+  }
+
+  static Future<bool> actualizarSaldoCorte(int idUsuario, int idCorte, API_ADEUDO adeudo) async {
+    bool resultado = false;
+    Database local = await BaseDatos.bd.database;
+    
+    int respuesta = await local.update(
+      "K_CORTE",
+      {
+        "MN_ADEUDO" : adeudo.MN_ADEUDO,
+        "NO_MESES_ADEUDO" : adeudo.NO_MESES,
+      },
+      where: "ID_USUARIO = ? AND ID_CORTE = ? ",
+      whereArgs: [idUsuario, idCorte],
     );
 
     if(respuesta > 0) {

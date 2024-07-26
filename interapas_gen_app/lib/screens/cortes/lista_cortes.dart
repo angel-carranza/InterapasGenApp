@@ -38,9 +38,16 @@ class _ListaCortesState extends State<ListaCortes> {
 
     if(aux != null){
 
+      for(K_CORTE corte in aux){
+        await AccesoDatos.actualizarAdeudo(corte.ID_CONTRATO, corte.ID_CORTE, corte.CL_INTERNET);
+      }
 
+      aux = await AccesoDatos.obtieneCortesGrupoLocal(widget.tipo, widget.claveGrupo);    //Vuelve a consultar para actualizar los montos.
 
-      listaCortes = aux;
+      if(aux != null){
+        listaCortes = aux;
+      }
+
     } else {
       if(context.mounted){
         mensajeSimpleOK("Hubo un error al cargar los datos, intente de nuevo por favor.", context);

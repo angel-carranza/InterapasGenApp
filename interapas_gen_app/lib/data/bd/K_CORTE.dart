@@ -9,6 +9,7 @@ class K_CORTE {
   int ID_CORTE_APP;
   int ID_CONTRATO;
   String? CL_RUTA;
+  String CL_INTERNET;
   String? NB_MUNICIPIO;
   String NB_COLONIA;
   String NB_CALLE;
@@ -28,6 +29,7 @@ class K_CORTE {
     this.ID_CORTE_APP,
     this.ID_CONTRATO,
     this.CL_RUTA,
+    this.CL_INTERNET,
     this.NB_MUNICIPIO,
     this.NB_COLONIA,
     this.NB_CALLE,
@@ -48,6 +50,7 @@ class K_CORTE {
     json["ID_CORTE_APP"] as int,
     json["ID_CONTRATO"] as int,
     json["CL_RUTA"] as String?,
+    json["CL_INTERNET"] as String,
     json["NB_MUNICIPIO"] as String?,
     json["NB_COLONIA"] as String,
     json["NB_CALLE"] as String,
@@ -67,6 +70,7 @@ class K_CORTE {
     "ID_CORTE_APP" : corte.ID_CORTE_APP,
     "ID_CONTRATO" : corte.ID_CONTRATO,
     "CL_RUTA" : corte.CL_RUTA,
+    "CL_INTERNET" : corte.CL_INTERNET,
     "NB_MUNICIPIO" : corte.NB_MUNICIPIO,
     "NB_COLONIA" : corte.NB_COLONIA.toUpperCase(),
     "NB_CALLE" : corte.NB_CALLE.toUpperCase(),
@@ -84,6 +88,7 @@ class K_CORTE {
     "ID_CONTRATO" : ID_CONTRATO,
     "CL_RUTA" : CL_RUTA,
     "NB_MUNICIPIO" : NB_MUNICIPIO,
+    "CL_INTERNET" : CL_INTERNET,
     "NB_COLONIA" : NB_COLONIA,
     "NB_CALLE" : NB_CALLE,
     "NO_EXTERIOR" : NO_EXTERIOR,

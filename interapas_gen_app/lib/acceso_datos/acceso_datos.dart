@@ -6,6 +6,7 @@ import 'package:interapas_gen_app/acceso_datos/api/default.dart';
 import 'package:interapas_gen_app/acceso_datos/api/general.dart';
 import 'package:interapas_gen_app/acceso_datos/bd.dart';
 import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
+import 'package:interapas_gen_app/data/api/API_ADEUDO.dart';
 import 'package:interapas_gen_app/data/api/API_CONEXION.dart';
 import 'package:http/http.dart' as http;
 import 'package:interapas_gen_app/data/api/API_CORTE.dart';
@@ -107,6 +108,34 @@ class AccesoDatos {
     
     return resultado;
   }
+  
+  static Future<bool> actualizarAdeudo(int idContrato, int idCorte, String clInternet) async {
+    bool resultado = false;
+    generalAPI api = generalAPI();
+
+    try {
+      http.Response r = await api.getAdeudo(idContrato, clInternet);
+
+      if(r.statusCode == 200){
+        Map<String, Object?> cuerpo = (json.decode(r.body) as List).first;
+
+        int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+
+        if(idUsuario > 0){
+          API_ADEUDO adeudoNuevo = API_ADEUDO.fromJsonAPI(cuerpo);
+          
+          resultado = await operacionesBD.actualizarSaldoCorte(idUsuario, idCorte, adeudoNuevo);
+        }
+      } else {
+        resultado = false;
+      }
+    } on Exception catch(_){
+      resultado = false;
+    }
+
+    return resultado;
+  }
+  
   //========================================//
 
   //FUNCIONES BASEDATOS LOCAL
