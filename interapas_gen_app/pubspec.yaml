@@ -30,3 +30,13 @@ flutter:
   assets:
     - lib/assets/img/logo.png
     
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: lib/assets/fonts/Montserrat-Regular.ttf
+    - family: Montserrat_Medium
+      fonts:
+        - asset: lib/assets/fonts/Montserrat-Medium.ttf
+    - family: Montserrat_Bold
+      fonts:
+        - asset: lib/assets/fonts/Montserrat-Bold.ttf

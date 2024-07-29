@@ -42,7 +42,9 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
       home: const Inicio_Screen(),
-      theme: ThemeData().copyWith(
+      theme: ThemeData(
+        fontFamily: "Montserrat",
+      ).copyWith(
         colorScheme: esquemaColorPrincipal,
         appBarTheme: const AppBarTheme().copyWith(
           backgroundColor: esquemaColorPrincipal.primary,
