@@ -26,7 +26,7 @@ class Menu_Screen extends StatelessWidget{
             TableRow(
               children: <Widget>[
                 BotonModulo(rutaModulo: "/cortes", titulo: "Cortes", icono: Icons.do_disturb_alt_rounded, colorTarjeta: Color.fromARGB(120, 255, 0, 0),),
-                //BotonModulo(rutaModulo: "/censos", titulo: "Censos", icono: Icons.edit_note_rounded, colorTarjeta: Color.fromARGB(120, 0, 0, 255),),
+                BotonModulo(rutaModulo: "/censos", titulo: "Censos", icono: Icons.edit_note_rounded, colorTarjeta: Color.fromARGB(120, 0, 0, 255),),
               ],
             ),
           ],

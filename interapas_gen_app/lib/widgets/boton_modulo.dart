@@ -13,24 +13,32 @@ class BotonModulo extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.symmetric(
+        vertical: 12.0,
+        horizontal: 8.0
+      ),
       child: Card(
-        color: colorTarjeta,
+        color: Colors.white,
+        elevation: 6.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
         child: SizedBox(
-          height: 90.0,
+          height: 100.0,
           child: Column(
             children: [
-              Container(height: 12.0,),
+              Expanded(child: Container()),
               IconButton(
                 icon: Icon(
                   icono,
-                  size: 36.0,
+                  size: 42.0,
                 ),
                 onPressed: () => Navigator.of(context).pushNamed(rutaModulo),
               ),
               Text(
                 titulo,
               ),
+              Expanded(child: Container())
             ],
           ),
         ),

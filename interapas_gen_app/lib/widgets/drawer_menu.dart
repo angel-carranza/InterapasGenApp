@@ -9,8 +9,6 @@ class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
 
 
-
-
   @override
   Widget build(BuildContext context) {
     String version = "";  
@@ -75,21 +73,13 @@ class DrawerMenu extends StatelessWidget {
             }
             
           ),
-          Expanded(child: Container()),
-          Card(
-            child: ListTile(
-              title: const Text("Borrar todo"),
-              leading: const Icon(Icons.delete),
-              onTap: () {},
-            ),
-          ),
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 12.0,
               horizontal: 6.0,
             ),
             child: Text(
-              "$version"
+              version
             ),
           ),
           const SizedBox(height: 30.0,),

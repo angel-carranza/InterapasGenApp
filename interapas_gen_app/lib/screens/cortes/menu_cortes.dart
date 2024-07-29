@@ -169,11 +169,8 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
                   ),
                 ),
               ]
-            )
+            ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(height: 30.0,),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: fgCargando? null:

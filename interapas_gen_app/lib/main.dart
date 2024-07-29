@@ -9,6 +9,18 @@ import 'screens/inicio.dart';
 import 'services/camara_provider.dart';
 import 'services/local_storage.dart';
 
+ColorScheme esquemaColorPrincipal = const ColorScheme(
+  brightness: Brightness.light,
+  primary: Color.fromARGB(255, 228, 3, 44),
+  onPrimary: Color.fromARGB(255, 255, 255, 255),
+  secondary: Color.fromARGB(255, 1, 47, 80),
+  onSecondary: Color.fromARGB(255, 255, 255, 255),
+  error: Color.fromARGB(255, 120, 0, 0),
+  onError: Color.fromARGB(255, 255, 255, 255),
+  surface: Color.fromARGB(255, 255, 255, 255),
+  onSurface: Color.fromARGB(255, 1, 47, 80)
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -27,8 +39,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: const Inicio_Screen(),
+      theme: ThemeData().copyWith(
+        colorScheme: esquemaColorPrincipal,
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: esquemaColorPrincipal.primary,
+          foregroundColor: esquemaColorPrincipal.onPrimary,
+        )
+      ),
       routes: {   //Definición de rutas de las pantallas para usar los Navigator..Named
         '/login': (context) => const Login_Screen(),
         '/menu' : (context) => const Menu_Screen(),
@@ -36,5 +56,6 @@ class MainApp extends StatelessWidget {
         '/cortes' : (context) => const MenuCortes_Screen(),
       },
     );
+
   }
 }
