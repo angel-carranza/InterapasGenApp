@@ -39,7 +39,9 @@ class _ListaCortesState extends State<ListaCortes> {
     if(aux != null){
 
       for(K_CORTE corte in aux){
-        await AccesoDatos.actualizarAdeudo(corte.ID_CONTRATO, corte.ID_CORTE, corte.CL_INTERNET);
+        if(corte.FG_ESTADO == 0) {
+          await AccesoDatos.actualizarAdeudo(corte.ID_CONTRATO, corte.ID_CORTE, corte.CL_INTERNET);
+        }
       }
 
       aux = await AccesoDatos.obtieneCortesGrupoLocal(widget.tipo, widget.claveGrupo);    //Vuelve a consultar para actualizar los montos.
