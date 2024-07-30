@@ -4,9 +4,10 @@ import 'package:interapas_gen_app/data/T_GRUPO_CORTES.dart';
 import 'package:interapas_gen_app/screens/cortes/lista_cortes.dart';
 
 class GrupoCortes extends StatelessWidget {
+  final callBackFunction;
   final T_GRUPO_CORTES grupo;
 
-  const GrupoCortes(this.grupo, {super.key,});
+  const GrupoCortes(this.grupo, {super.key, required this.callBackFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +37,9 @@ class GrupoCortes extends StatelessWidget {
           subtitle: Text("Asignadas: ${grupo.cantidad}"),
           trailing: IconButton(
             icon: const Icon(Icons.arrow_outward),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => ListaCortes(claveGrupo: grupo.nombreGrupo, tipo: grupo.tipoGrupo,)));
+            onPressed: () async {
+              await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => ListaCortes(claveGrupo: grupo.nombreGrupo, tipo: grupo.tipoGrupo,)));
+              await callBackFunction();
             },
           ),
         ),

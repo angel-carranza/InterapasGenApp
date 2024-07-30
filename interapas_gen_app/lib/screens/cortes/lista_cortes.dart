@@ -94,7 +94,7 @@ class _ListaCortesState extends State<ListaCortes> {
                     itemCount: numeroCortes,
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(bottom: 60.0),
-                    itemBuilder: (context, index) => ContratoCorte(tipoGrupo: widget.tipo, corte: listaCortes[index])
+                    itemBuilder: (context, index) => ContratoCorte(tipoGrupo: widget.tipo, corte: listaCortes[index], callBackFunction: _cargarContratos,)
                   ),
                 ),
                 Container(height: 12.0,),
@@ -111,7 +111,7 @@ class _ListaCortesState extends State<ListaCortes> {
                       await AccesoDatos.enviarCorteGuardado(corte);
                     }
 
-                    _cargarContratos();
+                    await _cargarContratos();
                   },
                   child: const Text("Enviar capturados"),
                 )

@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 class ContratoCorte extends StatefulWidget {
   final agrupaciones tipoGrupo;
   final K_CORTE corte;
+  final callBackFunction;
 
-  const ContratoCorte({super.key, required this.tipoGrupo, required this.corte});
+  const ContratoCorte({super.key, required this.tipoGrupo, required this.corte, required this.callBackFunction});
 
   @override
   State<ContratoCorte> createState() => _ContratoCorteState();
@@ -54,6 +55,8 @@ class _ContratoCorteState extends State<ContratoCorte> {
           ),
         )
       );
+
+      await widget.callBackFunction();    //Actualiza la lista para actualizar visualmente cualquier cambio
     }
 
     Color fondo = Theme.of(context).colorScheme.onPrimary;

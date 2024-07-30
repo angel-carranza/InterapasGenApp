@@ -165,7 +165,7 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
                     top: 12.0,
                     bottom: kFloatingActionButtonMargin + 56.0,
                   ),
-                  itemBuilder: (context, index) => GrupoCortes(grupos[index])
+                  itemBuilder: (context, index) => GrupoCortes(grupos[index], callBackFunction: _sincronizarCortes,)
                   ),
                 ),
               ]
