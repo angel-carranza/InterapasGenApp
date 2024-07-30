@@ -24,7 +24,6 @@ class FotoCorte extends StatelessWidget {
     if(dirImagen.isEmpty){
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
           minimumSize: const Size.fromHeight(60),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)))
         ),
@@ -56,6 +55,7 @@ class FotoCorte extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               width: 3.0,
+              color: Theme.of(context).colorScheme.secondary
             ),
           ),
           margin: const EdgeInsets.symmetric(
@@ -71,9 +71,9 @@ class FotoCorte extends StatelessWidget {
               height: 36,
               width: 36,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               child: IconButton(
                 onPressed: () async {
@@ -116,9 +116,10 @@ class FotoCorte extends StatelessWidget {
                     )
                   );  //Para recargar la interfaz de las fotos.
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.close_rounded,
                   size: 18,
+                  color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
             ),

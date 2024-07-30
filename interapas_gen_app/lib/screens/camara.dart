@@ -53,9 +53,10 @@ class _CamaraState extends State<Camara> {
             children: [
               Expanded(child: Container()),
               IconButton(
-                icon: const Icon(
-                  size: 72.0,
+                icon: Icon(
+                  size: 66.0,
                   Icons.lens_sharp,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () async {
                   try {
@@ -64,7 +65,7 @@ class _CamaraState extends State<Camara> {
                     final foto = await _controladorCamara.takePicture();
               
                     bool r = await widget.guardarFoto(foto.path);
-
+              
                     if(context.mounted && r){
                       Navigator.of(context).pop();
                     } else{

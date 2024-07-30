@@ -82,8 +82,20 @@ class _CapturaCorteState extends State<CapturaCorte> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "${widget.corte.NB_CALLE} ${widget.corte.NO_EXTERIOR} ${widget.noInterior}"
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Text(
+              "${widget.corte.NB_CALLE} ${widget.corte.NO_EXTERIOR} ${widget.noInterior}",
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontFamily: "Montserrat_Medium",
+                color: Theme.of(context).colorScheme.secondary
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 18.0,
           ),
           TextField(
             minLines: 1,
@@ -91,6 +103,11 @@ class _CapturaCorteState extends State<CapturaCorte> {
             expands: false,
             maxLength: 900,
             controller: controlador,
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Observaciones",
+            ),
             onChanged: (value) {
               widget.corte.DS_OBSERVACIONES = value;
             },
@@ -112,6 +129,10 @@ class _CapturaCorteState extends State<CapturaCorte> {
           ),
           Container(height: 18.0,),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              foregroundColor: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () async {
               if(widget.corte.DS_FOTOS != null){
                 if(widget.corte.DS_FOTOS != ""){
@@ -154,8 +175,8 @@ class _CapturaCorteState extends State<CapturaCorte> {
           Container(height: 18.0,),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
             ),
             onPressed: () {
               showDialog(
@@ -177,7 +198,7 @@ class _CapturaCorteState extends State<CapturaCorte> {
                           }
 
                           if(respuesta > 1){
-                            1+2;
+
                           } else {
                             if(context.mounted){
                               mensajeSimpleOK("Se guardó pero no se pudo enviar, intente más tarde.", context);

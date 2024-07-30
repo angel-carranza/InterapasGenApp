@@ -12,10 +12,27 @@ class GrupoCortes extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.symmetric(
+        vertical: 3.0,
+        horizontal: 0,
+      ),
       child: Card(
         child: ListTile(
-          title: Text(grupo.nombreGrupo),
+          contentPadding: const EdgeInsets.only(
+            left: 12.0,
+            top: 3.0,
+            right: 0.0,
+            bottom: 6.0,
+          ),
+          title: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Text(
+              grupo.nombreGrupo,
+              style: const TextStyle(
+                fontFamily: "Montserrat_Bold",
+              ),
+            ),
+          ),
           subtitle: Text("Asignadas: ${grupo.cantidad}"),
           trailing: IconButton(
             icon: const Icon(Icons.arrow_outward),

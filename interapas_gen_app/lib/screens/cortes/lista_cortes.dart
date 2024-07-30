@@ -98,6 +98,10 @@ class _ListaCortesState extends State<ListaCortes> {
                 Container(height: 12.0,),
                 (numeroGuardados > 0) ? 
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                  ),
                   onPressed: () async {
                     List<K_CORTE> listaGuardados = listaCortes.where((w) => w.FG_ESTADO != 0).toList();
 
