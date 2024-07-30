@@ -6,7 +6,13 @@ Future<void> mensajeSimpleOK(String textoMostrar, BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(textoMostrar),
+        title: Text(
+          textoMostrar,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontFamily: "Montserrat_Medium",
+          ),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () { Navigator.of(context).pop(); },

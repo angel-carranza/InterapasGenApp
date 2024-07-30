@@ -2,6 +2,7 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -65,16 +66,22 @@ class cortesAPI {
   }
 
   Future<http.Response> getBandera() async {
-    final Uri urlGet = Uri.http(servidorAPI, "$urlApi/General/GetBandera");
-    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
+    http.Response response = http.Response("", 900);
 
-    http.Response response = await http.get(
-      urlGet,
-      headers: <String, String> {
-        "Authorization": token
-      }
-    );
+    try {
+      final Uri urlGet = Uri.http(servidorAPI, "$urlApi/General/GetBandera");
+      String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
+      response = await http.get(
+        urlGet,
+        headers: <String, String> {
+          "Authorization": token
+        }
+      );
+    } on SocketException catch(_) {
+      response = http.Response("", 900);
+    }
+    
     return response;
   }
 

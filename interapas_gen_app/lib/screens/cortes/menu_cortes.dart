@@ -31,7 +31,11 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
   void initState() {
     super.initState();
     
-    _sincronizarCortes().then((arg){ });
+    _cargarCortesLocales().then((arg){ 
+      setState(() {
+        fgCargando = false;
+      });
+    });
   }
 
   Future<void> _sincronizarCortes() async {
@@ -81,6 +85,14 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       }
     }
     
+    await _cargarCortesLocales();
+ 
+    setState(() {
+      fgCargando = false;
+    });
+  }
+
+  _cargarCortesLocales() async {
     var aux = await AccesoDatos.obtieneGruposCortes(agrupadoActual);
 
     if(aux != null){
@@ -91,9 +103,6 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
       }
     }
 
-    setState(() {
-      fgCargando = false;
-    });
   }
 
   @override
@@ -120,13 +129,20 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
           ),
         ],
         selected: <agrupaciones>{agrupadoActual},
-        onSelectionChanged: (Set<agrupaciones> seleccionNueva) {  //Al actualizar
+        onSelectionChanged: (Set<agrupaciones> seleccionNueva) async {  //Al actualizar
           setState(() {
             agrupadoActual = seleccionNueva.first;
           });
       
-          _sincronizarCortes();
-      
+          setState(() {
+            fgCargando = true;
+          });
+
+          await _cargarCortesLocales();
+
+          setState(() {
+            fgCargando = false;
+          });
         },
       ),
     );
@@ -165,7 +181,17 @@ class _MenuCortes_ScreenState extends State<MenuCortes_Screen> {
                     top: 12.0,
                     bottom: kFloatingActionButtonMargin + 56.0,
                   ),
-                  itemBuilder: (context, index) => GrupoCortes(grupos[index], callBackFunction: _sincronizarCortes,)
+                  itemBuilder: (context, index) => GrupoCortes(grupos[index], callBackFunction: () async {
+                    setState(() {
+                      fgCargando = true;
+                    });
+
+                    await _cargarCortesLocales();
+
+                    setState(() {
+                      fgCargando = false;
+                    });
+                  },)
                   ),
                 ),
               ]
