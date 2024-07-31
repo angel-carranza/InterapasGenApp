@@ -37,6 +37,13 @@ class BotonModulo extends StatelessWidget {
               ),
               Text(
                 titulo,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: "Montserrat_Bold",
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
               Expanded(child: Container())
             ],

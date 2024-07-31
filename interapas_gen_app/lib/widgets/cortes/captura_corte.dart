@@ -4,6 +4,7 @@ import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
 import 'package:interapas_gen_app/data/bd/K_CORTE.dart';
 import 'package:interapas_gen_app/utilities/popup.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import 'foto_corte.dart';
 
@@ -82,16 +83,18 @@ class _CapturaCorteState extends State<CapturaCorte> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Text(
-              "${widget.corte.NB_CALLE} ${widget.corte.NO_EXTERIOR} ${widget.noInterior}",
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 16.0,
-                fontFamily: "Montserrat_Medium",
-                color: Theme.of(context).colorScheme.secondary
-              ),
+          TextScroll(
+            "${widget.corte.NB_CALLE} ${widget.corte.NO_EXTERIOR} ${widget.noInterior}",
+            numberOfReps: 3,
+            intervalSpaces: 10,
+            mode: TextScrollMode.endless,
+            delayBefore: Durations.extralong4 * 3,
+            pauseBetween: Durations.extralong4 * 5,
+            velocity: const Velocity(pixelsPerSecond: Offset(40,0)),
+            style: TextStyle(
+              fontSize: 16.0,
+              fontFamily: "Montserrat_Medium",
+              color: Theme.of(context).colorScheme.secondary
             ),
           ),
           const SizedBox(
@@ -104,9 +107,18 @@ class _CapturaCorteState extends State<CapturaCorte> {
             maxLength: 900,
             controller: controlador,
             style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.secondary,
+                )
+              ),
               labelText: "Observaciones",
+              floatingLabelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              )
             ),
             onChanged: (value) {
               widget.corte.DS_OBSERVACIONES = value;
@@ -130,8 +142,8 @@ class _CapturaCorteState extends State<CapturaCorte> {
           Container(height: 18.0,),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              foregroundColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Theme.of(context).colorScheme.onSecondary,
             ),
             onPressed: () async {
               if(widget.corte.DS_FOTOS != null){
@@ -175,8 +187,12 @@ class _CapturaCorteState extends State<CapturaCorte> {
           Container(height: 18.0,),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              foregroundColor: Theme.of(context).colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                side: BorderSide(color: Theme.of(context).colorScheme.primary)
+              )
             ),
             onPressed: () {
               showDialog(
@@ -223,7 +239,10 @@ class _CapturaCorteState extends State<CapturaCorte> {
                 ),
               );
             },
-            child: const Text("Cancelar corte"),
+            child: const Text(
+              "Cancelar corte",
+              style: TextStyle(fontFamily: "Montserrat_Medium"),
+            ),
           ),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:interapas_gen_app/utilities/popup.dart';
 import 'package:interapas_gen_app/widgets/cortes/contrato_corte.dart';
 import 'package:interapas_gen_app/widgets/loader.dart';
 import 'package:interapas_gen_app/widgets/mensaje_fondo.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 class ListaCortes extends StatefulWidget {
   final String claveGrupo;
@@ -68,10 +69,13 @@ class _ListaCortesState extends State<ListaCortes> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: TextScroll(
+          numberOfReps: 3,
           widget.claveGrupo,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
+          intervalSpaces: 10,
+          mode: TextScrollMode.endless,
+          delayBefore: Durations.extralong4 * 15,
+          pauseBetween: const Duration(seconds: 15),
           ),
         actions: const [],
       ),

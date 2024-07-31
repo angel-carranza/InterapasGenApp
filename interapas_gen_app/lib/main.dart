@@ -18,7 +18,7 @@ ColorScheme esquemaColorPrincipal = const ColorScheme(
   error: Color.fromARGB(255, 120, 0, 0),
   onError: Color.fromARGB(255, 255, 255, 255),
   surface: Color.fromARGB(255, 255, 255, 255),
-  onSurface: Color.fromARGB(255, 1, 47, 80)
+  onSurface: Color.fromARGB(255, 1, 47, 80),
 );
 
 Future<void> main() async {

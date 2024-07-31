@@ -90,17 +90,33 @@ class _ContratoCorteState extends State<ContratoCorte> {
               fontFamily: "Montserrat_Medium",
             ),
           ),
-          subtitle: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Text(
-              "${widget.corte.NB_COLONIA} ${widget.corte.CL_CODIGO_POSTAL} \nRuta: ${widget.corte.CL_RUTA}",
-              maxLines: 2,
-              style: TextStyle(
-                color: letra,
-                fontSize: 12.0,
-                overflow: TextOverflow.ellipsis,
+          subtitle: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  widget.corte.NB_COLONIA,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: letra,
+                    fontSize: 12.0,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-            ),
+              Text(
+                "Ruta: ${widget.corte.CL_RUTA}      C.P: ${widget.corte.CL_CODIGO_POSTAL}",
+                maxLines: 1,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: letra,
+                  fontSize: 12.0,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
           trailing: Text(
             "\$${currency.format(widget.corte.MN_ADEUDO)} $txtMeses",
