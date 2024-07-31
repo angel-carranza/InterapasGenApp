@@ -37,29 +37,40 @@ class cortesAPI {
     urlApi = conexionActual[1];
     servidorAPI = conexionActual[2];
     
-    http.Response response = await getBandera();
+    bool fgReintentar = true;
+    int i = 0;
 
-    if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
-      OperacionesPreferencias.insertarToken(await authorize());
-    } else {
-      if(response.statusCode != 200){
-        urlApi = conexionActual[1];
-        servidorAPI = conexionActual[2];
+    while(fgReintentar && i < 3){    
+      fgReintentar = false;
+      i++;
 
-        http.Response response = await getBandera();
+      http.Response response = await getBandera();
 
-        if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
-          OperacionesPreferencias.insertarToken(await authorize());
-        } else {
-          if(response.statusCode != 200){
-            return false;
+      if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
+        await OperacionesPreferencias.insertarToken(await authorize());
+        fgReintentar = true;
+      } else {
+        if(response.statusCode != 200){
+          urlApi = conexionActual[3];
+          servidorAPI = conexionActual[4];
+
+          http.Response response = await getBandera();
+
+          if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
+            await OperacionesPreferencias.insertarToken(await authorize());
+            fgReintentar = true;
+          } else {
+            if(response.statusCode != 200){
+              return false;
+            }
+            return true;
           }
+        } else {
           return true;
         }
-      } else {
-        return true;
-      }
 
+      }
+    
     }
 
     return false;
@@ -113,7 +124,7 @@ class cortesAPI {
 
       response = await http.get(
         urlGet,
-        headers: {"Authorization" : token }
+        headers: {"Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}" }
       );
 
       return response;
@@ -136,7 +147,7 @@ class cortesAPI {
       response = await http.post(
         urlPost,
         headers: <String, String> {
-          "Authorization" : token,
+          "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: cuerpoJson,

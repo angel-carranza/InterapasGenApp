@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
 import 'package:interapas_gen_app/screens/camara.dart';
 import 'package:interapas_gen_app/utilities/popup.dart';
-import 'package:path/path.dart';
 
 class FotoCorte extends StatelessWidget {
   final int idCorte;

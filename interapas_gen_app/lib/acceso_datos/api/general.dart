@@ -34,31 +34,43 @@ class generalAPI {
 
     urlApi = conexionActual[1];
     servidorAPI = conexionActual[2];
-    
-    http.Response response = await getBandera();
 
-    if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
-      OperacionesPreferencias.insertarToken(await authorize());
-    } else {
-      if(response.statusCode != 200){
-        urlApi = conexionActual[1];
-        servidorAPI = conexionActual[2];
+    bool fgReintentar = true;
+    int i = 0;
 
-        http.Response response = await getBandera();
+    while(fgReintentar && i < 3){    
+      fgReintentar = false;
+      i++;
+      
+      http.Response response = await getBandera();
 
-        if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
-          OperacionesPreferencias.insertarToken(await authorize());
-        } else {
-          if(response.statusCode != 200){
-            return false;
+      if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
+        await OperacionesPreferencias.insertarToken(await authorize());
+        fgReintentar = true;
+      } else {
+        if(response.statusCode != 200){
+          urlApi = conexionActual[3];
+          servidorAPI = conexionActual[4];
+
+          http.Response response = await getBandera();
+
+          if(response.statusCode == 401){   //Si la respuesta es que el token no esta autorizado
+            await OperacionesPreferencias.insertarToken(await authorize());
+            fgReintentar = true;
+          } else {
+            if(response.statusCode != 200){
+              return false;
+            }
+            return true;
           }
+        } else {
           return true;
         }
-      } else {
-        return true;
+
       }
 
     }
+
 
     return false;
   }
@@ -101,13 +113,14 @@ class generalAPI {
     String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
     if(await comprobarConexion()){
+
       final Uri urlGet = Uri.http(servidorAPI, "$urlApi/General/GetAcceso");
       http.Request request = http.Request(
         "GET",
         urlGet,
       )..headers.addAll({
         "Content-Type" : "application/json",
-        "Authorization" : token
+        "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
       });
 
       request.body = jsonEncode({
@@ -135,7 +148,7 @@ class generalAPI {
         urlGet,
       )..headers.addAll({
         "Content-Type" : "application/json",
-        "Authorization" : token
+        "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
       });
 
       request.body = jsonEncode({
