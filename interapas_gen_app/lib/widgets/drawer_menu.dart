@@ -71,7 +71,6 @@ class DrawerMenu extends StatelessWidget {
                 ),
               );
             }
-            
           ),
           Container(
             padding: const EdgeInsets.symmetric(
