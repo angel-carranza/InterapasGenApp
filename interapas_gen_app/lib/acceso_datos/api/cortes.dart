@@ -117,7 +117,6 @@ class cortesAPI {
 
   Future<http.Response> getCortes(int idEmpleado) async {
     http.Response response = http.Response("", 901);
-    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
     if(await comprobarConexion()){
       final Uri urlGet = Uri.http(servidorAPI, "$urlApi/Cortes/GetCortes", {"idEmpleado" : idEmpleado.toString()});
@@ -137,7 +136,6 @@ class cortesAPI {
 
   Future<http.Response> setCorte(Object? cuerpo) async {
     http.Response response = http.Response("", 404);
-    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
     if(await comprobarConexion()){
       final urlPost = Uri.http(servidorAPI, "$urlApi/Cortes/SetCorte");
@@ -161,7 +159,6 @@ class cortesAPI {
   
   Future<http.Response> getAdeudo(int idContrato, String clInternet) async {
     http.Response response = http.Response("", 901);
-    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
     if(await comprobarConexion()){
       final Uri urlGet = Uri.http(servidorAPI, "$urlApi/Cortes/GetAdeudoCorte");

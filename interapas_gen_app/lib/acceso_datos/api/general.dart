@@ -110,7 +110,6 @@ class generalAPI {
 
   Future<http.Response> getAcceso(String p_clUsuario, String p_nbPassword) async {
     http.Response response = http.Response("", 901);
-    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
     if(await comprobarConexion()){
 
