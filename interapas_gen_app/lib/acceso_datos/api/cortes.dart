@@ -158,5 +158,33 @@ class cortesAPI {
 
     return response;
   }
+  
+  Future<http.Response> getAdeudo(int idContrato, String clInternet) async {
+    http.Response response = http.Response("", 901);
+    String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
+
+    if(await comprobarConexion()){
+      final Uri urlGet = Uri.http(servidorAPI, "$urlApi/Cortes/GetAdeudoCorte");
+      http.Request request = http.Request(
+        "GET",
+        urlGet,
+      )..headers.addAll({
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
+      });
+
+      request.body = jsonEncode({
+        "claveCuenta" : idContrato,
+        "claveInternet" : clInternet,
+      });
+
+      var streamedResponse = await request.send();
+      response = await http.Response.fromStream(streamedResponse);
+    } else {
+      response = http.Response("Hubo un error de conexión.", 902);
+    }
+
+    return response;
+  }
 
 }

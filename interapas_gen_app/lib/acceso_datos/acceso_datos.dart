@@ -111,7 +111,7 @@ class AccesoDatos {
   
   static Future<bool> actualizarAdeudo(int idContrato, int idCorte, String clInternet) async {
     bool resultado = false;
-    generalAPI api = generalAPI();
+    cortesAPI api = cortesAPI();
 
     try {
       http.Response r = await api.getAdeudo(idContrato, clInternet);

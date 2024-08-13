@@ -14,8 +14,8 @@ class API_ADEUDO {
 
   static API_ADEUDO fromJsonAPI(Map<String, Object?> json) => API_ADEUDO(
     json["iD_CONTRATO"] as int,
-    json["mN_TOTAL_A_PAGAR"] as double,
-    json["nO_PERIODOS_ADEUDO"] as int,
+    json["mN_ADEUDO_ACTUAL"] as double,
+    json["meseS_ADEUDO"] as int,
   );
 
 }
