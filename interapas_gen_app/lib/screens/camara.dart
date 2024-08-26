@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_watermark/image_watermark.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../services/camara_provider.dart';
@@ -62,7 +64,7 @@ class _CamaraState extends State<Camara> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () async {
-                  try {
+//                  try {
                     await _iniciarControladorFuturo;
               
                     XFile foto = await _controladorCamara.takePicture();
@@ -74,15 +76,21 @@ class _CamaraState extends State<Camara> {
 
                       Directory dirFotos = Directory("${directorio.path}/fotos/");
 
-                      if(await dirFotos.exists()){
-
-                      } else {
+                      if(!(await dirFotos.exists())){
                         dirFotos = await dirFotos.create(recursive: true);
                       }
 
-                      foto.saveTo("${dirFotos.path}${fechaFoto.toString()}.jpg");
+                      final watermarkedImg = await ImageWatermark.addTextWatermark(
+                        imgBytes: await foto.readAsBytes(),
+                        watermarkText: DateFormat("yyyy-MM-dd – kk:mm").format(fechaFoto),
+                        dstX: 6,
+                        dstY: 6,
+                      );
 
                       dirGuardar = "${dirFotos.path}${fechaFoto.toString()}.jpg";
+
+                      await File(dirGuardar).writeAsBytes(watermarkedImg);
+
                     } on MissingPlatformDirectoryException catch(e) {
                       dirGuardar = foto.path;
                     }
@@ -98,13 +106,13 @@ class _CamaraState extends State<Camara> {
                         ));
                       }
                     }
-                  } catch (e) {
-                    if(context.mounted){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Hubo un error inesperado."),
-                      ));
-                    }
-                  }
+//                  } catch (e) {
+  //                  if(context.mounted){
+    //                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //                  content: Text("Hubo un error inesperado."),
+        //              ));
+          //          }
+            //      }
                 },
               ),
             ],
