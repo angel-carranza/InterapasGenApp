@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../services/camara_provider.dart';
 
@@ -62,9 +65,29 @@ class _CamaraState extends State<Camara> {
                   try {
                     await _iniciarControladorFuturo;
               
-                    final foto = await _controladorCamara.takePicture();
-              
-                    bool r = await widget.guardarFoto(foto.path);
+                    XFile foto = await _controladorCamara.takePicture();
+
+                    String dirGuardar = "";
+                    DateTime fechaFoto = await foto.lastModified();
+                    try {
+                      Directory directorio = await getApplicationDocumentsDirectory();
+
+                      Directory dirFotos = Directory("${directorio.path}/fotos/");
+
+                      if(await dirFotos.exists()){
+
+                      } else {
+                        dirFotos = await dirFotos.create(recursive: true);
+                      }
+
+                      foto.saveTo("${dirFotos.path}${fechaFoto.toString()}.jpg");
+
+                      dirGuardar = "${dirFotos.path}${fechaFoto.toString()}.jpg";
+                    } on MissingPlatformDirectoryException catch(e) {
+                      dirGuardar = foto.path;
+                    }
+
+                    bool r = await widget.guardarFoto(dirGuardar);
               
                     if(context.mounted && r){
                       Navigator.of(context).pop();

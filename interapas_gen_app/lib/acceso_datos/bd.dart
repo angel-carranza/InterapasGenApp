@@ -2,6 +2,7 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:interapas_gen_app/data/api/API_ADEUDO.dart';
 import 'package:interapas_gen_app/services/base_datos.dart';
@@ -379,6 +380,10 @@ class operacionesBD {
     );
 
     if(respuesta > 0){
+      File fotoEnCache = File(dirFoto);
+
+      await fotoEnCache.delete();
+
       resultado = true;
     }
 
