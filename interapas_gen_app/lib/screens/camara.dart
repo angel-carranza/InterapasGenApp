@@ -64,7 +64,7 @@ class _CamaraState extends State<Camara> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () async {
-//                  try {
+                  try {
                     await _iniciarControladorFuturo;
               
                     XFile foto = await _controladorCamara.takePicture();
@@ -106,13 +106,13 @@ class _CamaraState extends State<Camara> {
                         ));
                       }
                     }
-//                  } catch (e) {
-  //                  if(context.mounted){
-    //                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //                  content: Text("Hubo un error inesperado."),
-        //              ));
-          //          }
-            //      }
+                  } catch (e) {
+                    if(context.mounted){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Hubo un error inesperado."),
+                      ));
+                    }
+                  }
                 },
               ),
             ],
