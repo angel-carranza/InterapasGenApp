@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_watermark/image_watermark.dart';
+import 'package:watermark_unique/image_format.dart' as img_format;
+import 'package:watermark_unique/watermark_unique.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -71,6 +72,7 @@ class _CamaraState extends State<Camara> {
 
                     String dirGuardar = "";
                     DateTime fechaFoto = await foto.lastModified();
+                    String fechaFotoStr = DateFormat("yyyy-MM-dd – kk:mm").format(fechaFoto);
                     try {
                       Directory directorio = await getApplicationDocumentsDirectory();
 
@@ -80,16 +82,30 @@ class _CamaraState extends State<Camara> {
                         dirFotos = await dirFotos.create(recursive: true);
                       }
 
-                      final watermarkedImg = await ImageWatermark.addTextWatermark(
-                        imgBytes: await foto.readAsBytes(),
-                        watermarkText: DateFormat("yyyy-MM-dd – kk:mm").format(fechaFoto),
-                        dstX: 6,
-                        dstY: 6,
+                      WatermarkUnique waterMarkObject = WatermarkUnique();
+
+                      final watermarkedImg = await waterMarkObject.addTextWatermark(
+                        filePath: foto.path,
+                        text: fechaFotoStr,
+                        x: 24,
+                        y: 48,
+                        textSize: 32,
+                        quality: 100,
+                        color: Colors.white,
+                        imageFormat: img_format.ImageFormat.jpeg,
+                        backgroundTextColor: Colors.black.withOpacity(0.4),
+                        backgroundTextPaddingTop: 36,
+                        backgroundTextPaddingLeft: 24,
+                        backgroundTextPaddingRight: 24,
                       );
 
-                      dirGuardar = "${dirFotos.path}${fechaFoto.toString()}.jpg";
+                      dirGuardar = "${dirFotos.path}$fechaFotoStr.jpg";
 
-                      await File(dirGuardar).writeAsBytes(watermarkedImg);
+                      XFile fotoMarcada = XFile(foto.path.replaceAll(".jpg", ".jpeg"));
+
+                      await File(dirGuardar).writeAsBytes(await fotoMarcada.readAsBytes());
+
+                      await File(fotoMarcada.path).delete();
 
                     } on MissingPlatformDirectoryException catch(e) {
                       dirGuardar = foto.path;
