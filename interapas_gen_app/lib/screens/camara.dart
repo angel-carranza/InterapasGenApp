@@ -72,7 +72,7 @@ class _CamaraState extends State<Camara> {
 
                     String dirGuardar = "";
                     DateTime fechaFoto = await foto.lastModified();
-                    String fechaFotoStr = DateFormat("yyyy-MM-dd – kk:mm").format(fechaFoto);
+                    String fechaFotoStr = DateFormat("yyyy-MM-dd – hh:mm:ss a").format(fechaFoto);
                     try {
                       Directory directorio = await getApplicationDocumentsDirectory();
 
@@ -99,6 +99,7 @@ class _CamaraState extends State<Camara> {
                         backgroundTextPaddingRight: 24,
                       );
 
+                      fechaFotoStr = DateFormat("yyyy-MM-dd_kk:mm:ss.ms").format(fechaFoto);   //Se cambia formato para guardar como nombre de la foto.
                       dirGuardar = "${dirFotos.path}$fechaFotoStr.jpg";
 
                       XFile fotoMarcada = XFile(foto.path.replaceAll(".jpg", ".jpeg"));
