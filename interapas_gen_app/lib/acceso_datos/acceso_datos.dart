@@ -117,15 +117,20 @@ class AccesoDatos {
       http.Response r = await api.getAdeudo(idContrato, clInternet);
 
       if(r.statusCode == 200){
-        Map<String, Object?> cuerpo = (json.decode(r.body) as List).first;
+        List listaR = (json.decode(r.body) as List);
+        
+        if(listaR.isNotEmpty){
+          Map<String, Object?> cuerpo = listaR.first;
 
-        int idUsuario = OperacionesPreferencias.consultarIdUsuario();
+          int idUsuario = OperacionesPreferencias.consultarIdUsuario();
 
-        if(idUsuario > 0){
-          API_ADEUDO adeudoNuevo = API_ADEUDO.fromJsonAPI(cuerpo);
-          
-          resultado = await operacionesBD.actualizarSaldoCorte(idUsuario, idCorte, adeudoNuevo);
+          if(idUsuario > 0){
+            API_ADEUDO adeudoNuevo = API_ADEUDO.fromJsonAPI(cuerpo);
+            
+            resultado = await operacionesBD.actualizarSaldoCorte(idUsuario, idCorte, adeudoNuevo);
+          }
         }
+
       } else {
         resultado = false;
       }
