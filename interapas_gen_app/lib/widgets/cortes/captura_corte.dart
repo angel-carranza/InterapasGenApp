@@ -70,7 +70,7 @@ class _CapturaCorteState extends State<CapturaCorte> {
     if(listaFotos.length < 5) listaFotos.add(vacio);
 
     return Container(
-      height: widget.y / 1.5,
+      height: widget.y / 1.25,
       width: widget.x - 24.0,
       padding: const EdgeInsets.symmetric(
         vertical: 12.0,
