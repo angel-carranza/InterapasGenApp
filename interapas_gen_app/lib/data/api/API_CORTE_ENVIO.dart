@@ -15,6 +15,7 @@ class API_CORTE_ENVIO {
   String DS_OBSERVACIONES;
   String DS_FECHA_CAPTURA;
   List<String> DS_FOTOS;
+  List<String> DS_NOMBRES;
 
   API_CORTE_ENVIO(
     this.ID_CORTE_APP,
@@ -23,16 +24,19 @@ class API_CORTE_ENVIO {
     this.FG_ESTADO,
     this.DS_OBSERVACIONES,
     this.DS_FECHA_CAPTURA,
-    this.DS_FOTOS
+    this.DS_FOTOS,
+    this.DS_NOMBRES,
   );
 
   static Future<API_CORTE_ENVIO> fromCorte(K_CORTE corte, int idEmpleado) async {
     List<String> fotos = List.empty(growable: true);
+    List<String> nombres = List.empty(growable: true);
 
     if(corte.DS_FOTOS != null){
       if(corte.DS_FOTOS!.isNotEmpty){
         for(String direccion in corte.DS_FOTOS!.split('@')){
           fotos.add(base64Encode(await File(direccion).readAsBytes()));
+          nombres.add(direccion.split("/").last.split(".").first.replaceAll(":", "."));
         }
       }
     }
@@ -45,6 +49,7 @@ class API_CORTE_ENVIO {
       corte.DS_OBSERVACIONES ?? "",
       DateFormat("yyyy-MM-dd hh:mm:ss").format(corte.FE_CAPTURA ?? DateTime.now() ),
       fotos,
+      nombres,
     );
   }
 
@@ -56,5 +61,6 @@ class API_CORTE_ENVIO {
     "DS_OBSERVACIONES" : DS_OBSERVACIONES,
     "DS_FECHA_CAPTURA" : DS_FECHA_CAPTURA,
     "DS_FOTOS" : DS_FOTOS,
+    "DS_NOMBRES" : DS_NOMBRES,
   };
 }
