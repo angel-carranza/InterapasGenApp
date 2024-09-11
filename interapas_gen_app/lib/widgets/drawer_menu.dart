@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:interapas_gen_app/acceso_datos/acceso_datos.dart';
+import 'package:interapas_gen_app/acceso_datos/preferencias.dart';
 import 'package:interapas_gen_app/utilities/popup.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -22,12 +23,21 @@ class DrawerMenu extends StatelessWidget {
         children: [
           const SizedBox(height: 36.0,),
           Image.asset("lib/assets/img/logo.png"),
-          const DrawerHeader(
+          DrawerHeader(
             child: Text(
-              "Bienvenido \n",
+              "Bienvenido \n ${OperacionesPreferencias.consultarNbEmpleado()}",
               maxLines: 2,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            OperacionesPreferencias.consultarConexionActiva() != null ? OperacionesPreferencias.consultarConexionActiva()!.first : "",
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.clip,
+            style: const TextStyle(
+              fontFamily: "monospace",
             ),
           ),
           Expanded(child: Container()),

@@ -51,4 +51,14 @@ class OperacionesPreferencias {
     return resultado;
   }
 
+  static String consultarNbEmpleado() {
+    String? entero = LocalStorage.preferencias.getString("nbEmpleado");
+    return entero ?? "";
+  }
+
+  static Future<bool> insertarNbEmpleado(String p_nbEmpleado) async {
+    bool resultado = await LocalStorage.preferencias.setString("nbEmpleado", p_nbEmpleado);
+    return resultado;
+  }
+
 }

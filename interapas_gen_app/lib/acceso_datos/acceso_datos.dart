@@ -195,6 +195,7 @@ class AccesoDatos {
         if(idUsuario > 0) {  //Si pudo iniciar sesión en la BD local
           resultado = await OperacionesPreferencias.insertarIdUsuario(idUsuario);
           resultado = await OperacionesPreferencias.insertarIdEmpleado(usuario.ID_EMPLEADO);
+          resultado = await OperacionesPreferencias.insertarNbEmpleado(usuario.CL_USUARIO);
         }
 
       }
@@ -211,6 +212,7 @@ class AccesoDatos {
     if(resultado){
       resultado = await OperacionesPreferencias.insertarIdUsuario(0);
       resultado = await OperacionesPreferencias.insertarIdEmpleado(0);
+      resultado = await OperacionesPreferencias.insertarNbEmpleado("");
     }
 
     return resultado;
