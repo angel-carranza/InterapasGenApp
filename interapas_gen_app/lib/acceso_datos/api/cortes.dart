@@ -2,8 +2,6 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
 
 import '../../data/api/API_CONEXION.dart';
@@ -88,9 +86,9 @@ class cortesAPI {
         headers: <String, String> {
           "Authorization": token
         }
-      );
-    } on SocketException catch(_) {
-      response = http.Response("", 900);
+      ).timeout(const Duration(seconds: 5));
+    } on Exception catch(_) {
+      response = http.Response("", 901);
     }
     
     return response;
@@ -101,30 +99,39 @@ class cortesAPI {
 
     final Uri urlPost = Uri.http(servidorAPI, "$urlApi/Token/Authenticate");
 
-    response = await http.post(
-      urlPost,
-      headers: <String, String> {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({
-          "username": "InterapasPrueba",
-          "password": "Interapas99",
-      })
-    );
+    try{
+      response = await http.post(
+        urlPost,
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+            "username": "InterapasPrueba",
+            "password": "Interapas99",
+        })
+      );
+    } on Exception catch(_){
+      return "3RR0R";
+    }
 
     return response.body;
   }
 
   Future<http.Response> getCortes(int idEmpleado) async {
-    http.Response response = http.Response("", 901);
+    http.Response response = http.Response("", 900);
 
     if(await comprobarConexion()){
       final Uri urlGet = Uri.http(servidorAPI, "$urlApi/Cortes/GetCortes", {"idEmpleado" : idEmpleado.toString()});
 
-      response = await http.get(
-        urlGet,
-        headers: {"Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}" }
-      );
+      try{
+        response = await http.get(
+          urlGet,
+          headers: {"Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}" }
+        ).timeout(const Duration(seconds: 15)); 
+      }
+      on Exception catch(_){
+        response = http.Response("", 901);
+      }
 
       return response;
     } else {
@@ -135,21 +142,26 @@ class cortesAPI {
   }
 
   Future<http.Response> setCorte(Object? cuerpo) async {
-    http.Response response = http.Response("", 404);
+    http.Response response = http.Response("", 900);
 
     if(await comprobarConexion()){
       final urlPost = Uri.http(servidorAPI, "$urlApi/Cortes/SetCorte");
 
       var cuerpoJson = jsonEncode(cuerpo);
 
-      response = await http.post(
-        urlPost,
-        headers: <String, String> {
-          "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: cuerpoJson,
-      );
+      try{
+        response = await http.post(
+          urlPost,
+          headers: <String, String> {
+            "Authorization" : "Bearer ${OperacionesPreferencias.consulatarToken()}",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: cuerpoJson,
+        ).timeout(const Duration(seconds: 10));
+      } on Exception catch(_){
+        response = http.Response("", 901);
+      }
+      
     } else {
       response = http.Response("Hubo un error de conexión.", 902);
     }
@@ -158,7 +170,7 @@ class cortesAPI {
   }
   
   Future<http.Response> getAdeudo(int idContrato, String clInternet) async {
-    http.Response response = http.Response("", 901);
+    http.Response response = http.Response("", 900);
 
     if(await comprobarConexion()){
       final Uri urlGet = Uri.http(servidorAPI, "$urlApi/Cortes/GetAdeudoCorte");
@@ -175,8 +187,13 @@ class cortesAPI {
         "claveInternet" : clInternet,
       });
 
-      var streamedResponse = await request.send();
-      response = await http.Response.fromStream(streamedResponse);
+      try{
+        var streamedResponse = await request.send().timeout(const Duration(seconds: 3));
+        response = await http.Response.fromStream(streamedResponse);
+      }
+      on Exception catch(_){
+        response = http.Response("", 901);
+      }
     } else {
       response = http.Response("Hubo un error de conexión.", 902);
     }

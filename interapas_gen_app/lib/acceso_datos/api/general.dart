@@ -76,15 +76,20 @@ class generalAPI {
   }
 
   Future<http.Response> getBandera() async {
+    http.Response response = http.Response("", 900);
     final Uri urlGet = Uri.http(servidorAPI, "$urlApi/General/GetBandera");
     String token = "Bearer ${OperacionesPreferencias.consulatarToken()}";
 
-    http.Response response = await http.get(
-      urlGet,
-      headers: <String, String> {
-        "Authorization": token
-      }
-    );
+    try {
+      response = await http.get(
+        urlGet,
+        headers: <String, String> {
+          "Authorization": token
+        }
+      ).timeout(const Duration(seconds: 5));
+    } on Exception catch(_){
+      response = http.Response("", 901);
+    }
 
     return response;
   }
@@ -94,22 +99,26 @@ class generalAPI {
 
     final Uri urlPost = Uri.http(servidorAPI, "$urlApi/Token/Authenticate");
 
-    response = await http.post(
-      urlPost,
-      headers: <String, String> {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({
-          "username": "InterapasPrueba",
-          "password": "Interapas99",
-      })
-    );
+    try {
+      response = await http.post(
+        urlPost,
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+            "username": "InterapasPrueba",
+            "password": "Interapas99",
+        })
+      ).timeout(const Duration(seconds: 5));
+    } on Exception catch(_){
+      return "3RR0R";
+    }
 
     return response.body;
   }
 
   Future<http.Response> getAcceso(String p_clUsuario, String p_nbPassword) async {
-    http.Response response = http.Response("", 901);
+    http.Response response = http.Response("", 900);
 
     if(await comprobarConexion()){
 
@@ -127,8 +136,12 @@ class generalAPI {
         "password" : p_nbPassword,
       });
 
-      var streamedResponse = await request.send();
-      response = await http.Response.fromStream(streamedResponse);
+      try{
+        var streamedResponse = await request.send().timeout(const Duration(seconds: 10));
+        response = await http.Response.fromStream(streamedResponse);
+      } on Exception catch(_) {
+        response = http.Response("", 901);
+      }
     } else {
       response = http.Response("Hubo un error de conexión.", 902);
     }
