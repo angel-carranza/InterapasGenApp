@@ -10,7 +10,7 @@ class defaultAPI {
 
   static Future<http.Response> getAPIs() async {
     http.Response response = http.Response("", 900);
-    final Uri instruccionGet = Uri.http(servidorAPI, "$urlAPI/GetAPIs");
+    final Uri instruccionGet = Uri.http(servidorAPI, "$urlAPI/GetAPIs_v2");
 
     try{
       response = await http.get(instruccionGet).timeout(const Duration(seconds: 10));
