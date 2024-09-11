@@ -39,10 +39,15 @@ class _ListaCortesState extends State<ListaCortes> {
 
     if(aux != null){
 
+      int z = 0;  //Indice de control para detener ciclo si es necesario.
       for(K_CORTE corte in aux){
         if(corte.FG_ESTADO == 0) {
-          await AccesoDatos.actualizarAdeudo(corte.ID_CONTRATO, corte.ID_CORTE, corte.CL_INTERNET);
+          if (!await AccesoDatos.actualizarAdeudo(corte.ID_CONTRATO, corte.ID_CORTE, corte.CL_INTERNET)){
+            z++;
+          }
         }
+
+        if(z >= 3) break;   //Si tres consultas fallan, detiene el proceso ciclico para evitar dejar trabado al usuario.
       }
 
       aux = await AccesoDatos.obtieneCortesGrupoLocal(widget.tipo, widget.claveGrupo);    //Vuelve a consultar para actualizar los montos.
