@@ -78,6 +78,8 @@ class _Configuracion_ScreenState extends State<Configuracion_Screen> {
                   if(listaNueva.isNotEmpty){
 
                     if(await AccesoDatos.insertaNuevasConexiones(listaNueva)){
+                      await AccesoDatos.actualizaConexionActiva(listaNueva.where((w) => w.FG_ACTIVA).first.CLAVE);
+
                       if(context.mounted) {
                         _cargaInicial();
                         mensajeSimpleOK("Se actualizó correctamente.", context);
